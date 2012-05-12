@@ -1,0 +1,17 @@
+<html>
+  <body>
+      <form enctype="multipart/form-data"  method="post" action="csv.json">
+        <tal:block define="widgets view/widgets">
+          <tal:block replace="structure provider:groupserver.FormWidgets"/>
+        </tal:block>
+        <div class="buttons" tal:condition="view/availableActions">
+          <tal:block repeat="action view/actions">
+            <div class="formelementbutton">
+              <span tal:replace="structure action/render">Button</span>
+            </div>
+          </tal:block>
+        </div><!--buttons-->
+      </form>
+  </body>
+</html>
+
