@@ -1,39 +1,23 @@
 # coding=utf-8
-''' Implementation of the Edit Image form.
-'''
-try:
-    from five.formlib.formbase import PageForm
-except ImportError:
-    from Products.Five.formlib.formbase import PageForm
-
-from Products.XWFCore import XWFUtils
-from zope.component import createObject
-from zope.interface import alsoProvides
+from csv import DictReader
 from zope.formlib import form
-from zope.schema import getFieldsInOrder
-
+from zope.interface import alsoProvides
 from Products.Five.browser.pagetemplatefile import ZopeTwoPageTemplateFile
-from Products.Five import BrowserView
-
+from gs.group.base import GroupForm, GroupPage
 from interface import ICsv
 from gs.profile.email.base.emailaddress import NewEmailAddress, \
     NotAValidEmailAddress, DisposableEmailAddressNotAllowed, \
     EmailAddressExists
-
-
-from csv import DictReader
-
-import os
-
 from zif.jsonserver.jsoncomponent import JSONWriter
 
-class CSVJson(BrowserView):
+
+class CSVJson(GroupPage):
     def __init__(self, context, request):
-        BrowserView.__init__(self, context, request)
-    
+        super(CSVJson, self).__init__(context, request)
+
     def __call__(self, *args, **kw):
         data = self.request.form.get('form.csv').read()
-        csvResults = DictReader(data.split('\n'), ('email','name'))
+        csvResults = DictReader(data.split('\n'), ('email', 'name'))
 
         if True:
             self.status = u'Changed %s'
@@ -45,7 +29,7 @@ class CSVJson(BrowserView):
         writer = JSONWriter()
         output = {'fields': csvResults.fieldnames,
                   'rows': []}
-        
+
         for row in csvResults:
             errors = []
             email = row['email']
@@ -63,25 +47,21 @@ class CSVJson(BrowserView):
 
             row['errors'] = errors
             output['rows'].append(row)
-         
+
         self.request.RESPONSE.write(writer.write(output))
-        self.request.RESPONSE.setHeader('Content-Type','application/json')
-    
-class CSVJsonForm(PageForm):
+        self.request.RESPONSE.setHeader('Content-Type', 'application/json')
+
+
+class CSVJsonForm(GroupForm):
     label = u'Process a CSV File into JSON'
     pageTemplateFileName = 'browser/templates/csv_to_json.pt'
     template = ZopeTwoPageTemplateFile(pageTemplateFileName)
     form_fields = form.Fields(ICsv, render_context=False)
 
-    def __init__(self, context, request):
-        PageForm.__init__(self, context, request)
-        
-        alsoProvides(context, ICsv)
-
-        self.context = context
-        self.request = request
+    def __init__(self, group, request):
+        super(CSVJsonForm, self).__init__(group, request)
+        alsoProvides(group, ICsv)
 
     @form.action(label=u'Convert', failure=None)
     def dummy_handler(self, action, data):
-        raise NotImplementedError, "This form is dummy, only for testing"
-
+        raise NotImplementedError("This form is dummy, only for testing")
