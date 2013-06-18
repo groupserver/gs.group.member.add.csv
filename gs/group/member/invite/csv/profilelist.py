@@ -5,6 +5,7 @@ from zope.interface import implements, providedBy
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.interfaces import IVocabulary, IVocabularyTokenized, \
     ITitledTokenizedTerm
+from zope.schema import *
 from zope.schema import *  # FIXME: Delete
 from Products.GSProfile import interfaces as profileSchemas
 from Products.XWFCore.odict import ODict
