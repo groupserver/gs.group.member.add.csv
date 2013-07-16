@@ -6,7 +6,7 @@ from profilelist import ProfileList
 class Columns(object):
 
     def __init__(self, context, form):
-        if not self.context:
+        if not context:
             m = u'Context not supplied'
             raise ValueError(m)
         self.context = context

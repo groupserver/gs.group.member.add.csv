@@ -21,12 +21,20 @@ from Products.GSProfile.interfaceCoreProfile import deliveryVocab
 
 class CSVProcessor(object):
 
-    def __init__(self, form, columns):
-        if type(form) != dict:
-            m = u'The form is not a dictionary'
-            raise TypeError(m)
+    def __init__(self, context, form, columns):
+        if not context:
+            m = u'Context not supplied'
+            raise ValueError(m)
+        self.context = context
 
+        if type(form) != dict:
+            m = u'The form is a {0}, not a dictionary'
+            raise TypeError(m.format(type(form)))
         self.form = form
+
+        if not columns:
+            m = u'Columns not supplied'
+            raise ValueError(m)
         self.columns = columns
 
     def process(self):
