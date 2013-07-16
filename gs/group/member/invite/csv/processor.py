@@ -396,7 +396,8 @@ class CSVProcessor(object):
 
     def error_msg(self, email, msg):
         m = u'<span>Did not create a profile for the email address '\
-            u'<code class="email">{0}</code>: <span>{1}</span></span>'
+            u'<code class="email">{0}</code>: '\
+            u'<span class="muted">{1}</span></span>'
         retval = m.format(escape(email), escape(msg))
         return retval
 
