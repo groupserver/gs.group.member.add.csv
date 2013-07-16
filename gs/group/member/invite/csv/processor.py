@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from csv import DictReader, Error as CSVError
+from cgi import escape
+from csv import Error as CSVError
 from zope.component import createObject
 from zope.formlib import form as formlib
 from gs.content.form.utils import enforce_schema
@@ -17,6 +18,7 @@ from Products.CustomUserFolder.interfaces import IGSUserInfo
 from Products.CustomUserFolder.userinfo import userInfo_to_anchor
 from Products.GSProfile.utils import create_user_from_email
 from Products.GSProfile.interfaceCoreProfile import deliveryVocab
+from unicodereader import UnicodeDictReader
 
 
 class CSVProcessor(object):
@@ -68,7 +70,7 @@ class CSVProcessor(object):
         error = False
         if 'csvfile' in self.form:
             csvfile = self.form.get('csvfile')
-            csvResults = DictReader(csvfile, self.columns)
+            csvResults = UnicodeDictReader(csvfile, self.columns)
         else:
             message = u'<p>There was no CSV file specified. Please specify a '\
                   u'CSV file</p>'
@@ -84,7 +86,7 @@ class CSVProcessor(object):
         assert 'message' in result
         assert type(result['message']) == unicode
         assert 'csvResults' in result
-        assert isinstance(result['csvResults'], DictReader)
+        assert isinstance(result['csvResults'], UnicodeDictReader)
         assert 'form' in result
         assert type(result['form']) == dict
         return result
@@ -112,7 +114,8 @@ class CSVProcessor(object):
             error       bool      True if an error was encounter.
             message     str       A feedback message.
         '''
-        assert isinstance(csvResults, DictReader)
+        if not isinstance(csvResults, UnicodeDictReader):
+            raise TypeError('csvResults is not a UnicodeDictReader')
 
         errorMessage = u'<ul>\n'
         errorCount = 0
@@ -160,11 +163,12 @@ class CSVProcessor(object):
                     else:
                         assert False, 'Unexpected return value from process_'\
                             'row: %d' % r['new']
-                except Exception, e:
+                except Exception, e:  # --=mpj17=-- change to debug
                     error = True
                     errorCount = errorCount + 1
-                    m = u'{0}\n<li><strong>Unexpected Error:</strong> {1}</li>'
-                    errorMessage = m.format(errorMessage, unicode(e))
+                    m = u'{0}\n<li><strong>{1}:</strong> {2}</li>'
+                    errorMessage = m.format(errorMessage, e.__class__.__name__,
+                                            escape(unicode(e)))
                 rowCount = rowCount + 1
 
                 assert (existingUserCount + newUserCount + errorCount +
@@ -270,9 +274,12 @@ class CSVProcessor(object):
                                   0 on error.
             user        instance  An instance of the CustomUser class.
         '''
-        assert type(row) == dict
-        assert 'toAddr' in row.keys(), '"toAddr" is not in row.keys()'
-        assert row['toAddr']
+        if type(row) != dict:
+            raise TypeError(u'CSV row is not a dict')
+        if 'toAddr' not in row:
+            raise ValueError(u'Email address is not in CSV row')
+        if not row['toAddr']:
+            raise ValueError(u'Email address is not set')
 
         user = None
         new = 0
@@ -282,7 +289,8 @@ class CSVProcessor(object):
         emailChecker = NewEmailAddress(title=u'Email')
         emailChecker.context = self.context  # --=mpj17=-- Legit?
         try:
-            emailChecker.validate(email)
+            asciiEmail = email.encode('ascii', 'ignore')
+            emailChecker.validate(asciiEmail)  # email addrs must be ASCII
         except EmailAddressExists, e:
             user = self.acl_users.get_userByEmail(email)
             assert user, u'User for <%s> not found' % email
@@ -358,17 +366,17 @@ class CSVProcessor(object):
                   'message': m,
                   'user': user,
                   'new': new}
-        assert result
-        assert type(result) == dict
-        assert 'error' in result
-        assert type(result['error']) == bool
-        assert 'message' in result
-        assert type(result['message']) == unicode
-        assert 'user' in result
+        assert result, 'result not set'
+        assert type(result) == dict, 'result not a dict'
+        assert 'error' in result, 'error not in result'
+        assert type(result['error']) == bool, 'error not a bool'
+        assert 'message' in result, 'message not in result'
+        assert type(result['message']) == unicode, 'message not unicode'
+        assert 'user' in result, 'user not in result'
         # If an email address is invalid or disposable, user==None
         #assert isinstance(result['user'], CustomUser)
-        assert 'new' in result
-        assert type(result['new']) == int
+        assert 'new' in result, 'new not in result'
+        assert type(result['new']) == int, 'new not int'
         assert result['new'] in range(0, 5), '%d not in range' % result['new']
 
         return result
@@ -387,9 +395,10 @@ class CSVProcessor(object):
         return userInfo
 
     def error_msg(self, email, msg):
-        return\
-          u'Did not create a profile for the email address '\
-          u'<code class="email">%s</code>. %s' % (email, msg)
+        m = u'<span>Did not create a profile for the email address '\
+            u'<code class="email">{0}</code>: <span>{1}</span></span>'
+        retval = m.format(escape(email), escape(msg))
+        return retval
 
     def set_delivery_for_user(self, userInfo, delivery):
         '''Set the message delivery setting for the user
