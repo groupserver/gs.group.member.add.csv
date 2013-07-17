@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from cgi import escape
 from csv import Error as CSVError
+from zope.cachedescriptors.property import Lazy
 from zope.component import createObject
 from zope.formlib import form as formlib
 from gs.content.form.utils import enforce_schema
@@ -22,12 +23,19 @@ from unicodereader import UnicodeDictReader
 
 
 class CSVProcessor(object):
+    invite = True
 
-    def __init__(self, context, form, columns):
+    def __init__(self, context, request, form, columns, subject, message,
+                    fromAddr, profileSchema, profileFields):
         if not context:
             m = u'Context not supplied'
             raise ValueError(m)
         self.context = context
+
+        if not request:
+            m = u'Request not supplied'
+            raise ValueError(m)
+        self.request = request
 
         if type(form) != dict:
             m = u'The form is a {0}, not a dictionary'
@@ -38,6 +46,48 @@ class CSVProcessor(object):
             m = u'Columns not supplied'
             raise ValueError(m)
         self.columns = columns
+
+        if not subject:
+            m = u'Subject not supplied'
+            raise ValueError(m)
+        self.subject = subject
+
+        if not message:
+            m = u'Message not supplied'
+            raise ValueError(m)
+        self.message = message
+
+        if not fromAddr:
+            m = u'From address not supplied'
+            raise ValueError(m)
+        self.fromAddr = fromAddr
+
+        if not profileSchema:
+            m = u'Profile schema not supplied'
+            raise ValueError(m)
+        self.profileSchema = profileSchema
+
+        if not profileFields:
+            m = u'Profile fields not supplied'
+            raise ValueError(m)
+        self.profileFields = profileFields
+
+    @Lazy
+    def adminInfo(self):
+        retval = createObject('groupserver.LoggedInUser', self.context)
+        return retval
+
+    @Lazy
+    def siteInfo(self):
+        retval = createObject('groupserver.SiteInfo', self.context)
+        assert retval, 'Could not create the SiteInfo from %s' % self.context
+        return retval
+
+    @Lazy
+    def groupInfo(self):
+        retval = createObject('groupserver.GroupInfo', self.context)
+        assert retval, 'Could not create the GroupInfo from %s' % self.context
+        return retval
 
     def process(self):
         '''Process the CSV file specified by the user.
@@ -292,7 +342,7 @@ class CSVProcessor(object):
             asciiEmail = email.encode('ascii', 'ignore')
             emailChecker.validate(asciiEmail)  # email addrs must be ASCII
         except EmailAddressExists, e:
-            user = self.acl_users.get_userByEmail(email)
+            user = self.context.acl_users.get_userByEmail(email)
             assert user, u'User for <%s> not found' % email
             userInfo = IGSUserInfo(user)
             auditor, inviter = self.get_auditor_inviter(userInfo)
@@ -386,7 +436,7 @@ class CSVProcessor(object):
         assert 'toAddr' in fields
         assert fields['toAddr']
 
-        email = fields['toAddr'].strip()
+        email = fields['toAddr'].strip().encode('ascii', 'ignore')
 
         user = create_user_from_email(self.context, email)
         userInfo = IGSUserInfo(user)
