@@ -326,6 +326,7 @@ class CSVProcessor(object):
         '''
         if type(row) != dict:
             raise TypeError(u'CSV row is not a dict')
+        # FIXME: Check *all* the required columns, not just the email address
         if 'toAddr' not in row:
             raise ValueError(u'Email address is not in CSV row')
         if not row['toAddr']:
