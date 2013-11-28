@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+# Copyright © 2013 OnlineGroups.net and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
 from zope.app.apidoc.interface import getFieldsInOrder
+from zope.cachedescriptors.property import Lazy
 from zope.interface.common.mapping import IEnumerableMapping
 from zope.interface import implements, providedBy
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.interfaces import IVocabulary, IVocabularyTokenized, \
     ITitledTokenizedTerm
-from zope.schema import *
 from zope.schema import *  # FIXME: Delete
 from Products.GSProfile import interfaces as profileSchemas
 from Products.XWFCore.odict import ODict
@@ -16,40 +29,41 @@ class ProfileList(object):
     __used_for__ = IEnumerableMapping
 
     def __init__(self, context):
+        if not context:
+            raise ValueError('There is no context')
         self.context = context
-        self.__properties = ODict()
-        self.__profileInterfaceName = None
 
-    @property
+    @Lazy
     def profileSchemaName(self):
-        if self.__profileInterfaceName is None:
-            site_root = self.context.site_root()
-            assert hasattr(site_root, 'GlobalConfiguration')
-            config = site_root.GlobalConfiguration
-            ifName = config.getProperty('profileInterface', 'IGSCoreProfile')
-            # --=mpj17=-- Sometimes profileInterface is set to ''
-            ifName = (ifName and ifName) or 'IGSCoreProfile'
-            self.__profileInterfaceName = '%sAdminJoinCSV' % ifName
-            assert self.__profileInterfaceName is not None
-            assert hasattr(profileSchemas, ifName), \
-                'Interface "%s" not found.' % ifName
-            assert hasattr(profileSchemas, self.__profileInterfaceName), \
-                'Interface "%s" not found.' % self.__profileInterfaceName
-        return self.__profileInterfaceName
+        site_root = self.context.site_root()
+        assert hasattr(site_root, 'GlobalConfiguration'), \
+            'No GlobalConfiguration'
+        config = site_root.GlobalConfiguration
+        ifName = config.getProperty('profileInterface', 'IGSCoreProfile')
+        assert hasattr(profileSchemas, ifName), \
+            'Interface "%s" not found.' % ifName
 
-    @property
+        # --=mpj17=-- Sometimes profileInterface is set to ''
+        ifName = ifName if ifName else 'IGSCoreProfile'
+        retval = '%sAdminJoinCSV' % ifName
+
+        assert retval is not None, 'retval is None'
+        assert hasattr(profileSchemas, retval), \
+            'Interface "%s" not found.' % retval
+        return retval
+
+    @Lazy
     def schema(self):
         return getattr(profileSchemas, self.profileSchemaName)
 
     def __iter__(self):
         """See zope.schema.interfaces.IIterableVocabulary"""
-        retval = [SimpleTerm(self.properties[p], p, self.properties[p].title)
-                  for p in self.properties.keys()]
-        for term in retval:
-            assert term
-            assert ITitledTokenizedTerm in providedBy(term)
-            assert term.value.title == term.title
-        return iter(retval)
+        for p in list(self.properties.keys()):
+            retval = SimpleTerm(self.properties[p], p, self.properties[p].title)
+            assert retval
+            assert ITitledTokenizedTerm in providedBy(retval)
+            assert retval.value.title == retval.title
+            yield retval
 
     def __len__(self):
         """See zope.schema.interfaces.IIterableVocabulary"""
@@ -81,14 +95,12 @@ class ProfileList(object):
                 return retval
         raise LookupError(token)
 
-    @property
+    @Lazy
     def properties(self):
-        if len(self.__properties) == 0:
-            assert self.context
-            ifs = getFieldsInOrder(self.schema)
-            for interface in ifs:
-                self.__properties[interface[0]] = interface[1]
-        retval = self.__properties
+        retval = ODict()
+        ifs = getFieldsInOrder(self.schema)
+        for interface in ifs:
+            retval[interface[0]] = interface[1]
         assert isinstance(retval, ODict)
         assert retval
         return retval

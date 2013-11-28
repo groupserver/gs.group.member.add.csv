@@ -1,11 +1,14 @@
 # coding=utf-8
 from zope.interface.interface import Interface
-from zope.schema import Bytes
+from zope.schema import Bytes, List
 
 
 class ICsv(Interface):
     """ Schema for processing a CSV file. """
-    csv = Bytes(
-            title=u"CSV File",
+    csv = Bytes(title=u"CSV File",
             description=u'The CSV file to be processed.',
-      required=True)
+            required=True)
+
+    columns = List(title=u'Columns',
+                description=u'The columns in the CSV.',
+                required=True)

@@ -213,7 +213,7 @@ class CSVProcessor(object):
                     else:
                         assert False, 'Unexpected return value from process_'\
                             'row: %d' % r['new']
-                except Exception, e:  # --=mpj17=-- change to debug
+                except ValueError, e:  # --=mpj17=-- change to debug
                     error = True
                     errorCount = errorCount + 1
                     m = u'{0}\n<li><strong>{1}:</strong> {2}</li>'
