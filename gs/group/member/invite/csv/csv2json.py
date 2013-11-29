@@ -12,12 +12,12 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
+from json import dumps as to_json
 from zope.cachedescriptors.property import Lazy
 from zope.formlib import form as formlib
 from gs.content.form.api.json import GroupEndpoint
 from .interface import ICsv
-from .profilelist import ProfileList
 from .unicodereader import UnicodeDictReader
 
 
@@ -27,28 +27,24 @@ class CSV2JSON(GroupEndpoint):
         super(CSV2JSON, self).__init__(group, request)
 
     @Lazy
-    def profileList(self):
-        retval = ProfileList(self.context)
-        return retval
-
-    @Lazy
-    def requiredColumns(self):
-        retval = [p for p in self.profileList if p.value.required]
-        return retval
-
-    @Lazy
     def form_fields(self):
         retval = formlib.Fields(ICsv, render_context=False)
         assert retval
         return retval
 
-    @formlib.action(label=u'Submit', prefix='', failure='process_failure')
+    @formlib.action(label='Submit', prefix='', failure='process_failure')
     def process_success(self, action, data):
         csv = data['csv']
         cols = data['columns']
-        # TODO: check the required columns are present.
+        # TODO: Delivery?
+
         reader = UnicodeDictReader(csv, cols)
-        print reader
+        reader.next()  # Skip the first row (the header)
+        profiles = []
+        for row in reader:
+            profiles.append(row)
+        retval = to_json(profiles)
+        return retval
 
     def process_failure(self, action, data, errors):
         retval = self.build_error_response(action, data, errors)

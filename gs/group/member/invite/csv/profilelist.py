@@ -12,6 +12,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+from __future__ import absolute_import
 from zope.app.apidoc.interface import getFieldsInOrder
 from zope.cachedescriptors.property import Lazy
 from zope.interface.common.mapping import IEnumerableMapping
@@ -22,6 +23,7 @@ from zope.schema.interfaces import IVocabulary, IVocabularyTokenized, \
 from zope.schema import *  # FIXME: Delete
 from Products.GSProfile import interfaces as profileSchemas
 from Products.XWFCore.odict import ODict
+from .error import GlobalConfigError, ProfileNotFound
 
 
 class ProfileList(object):
@@ -36,12 +38,12 @@ class ProfileList(object):
     @Lazy
     def profileSchemaName(self):
         site_root = self.context.site_root()
-        assert hasattr(site_root, 'GlobalConfiguration'), \
-            'No GlobalConfiguration'
+        if not site_root:
+            raise GlobalConfigError('Global configuration not found')
         config = site_root.GlobalConfiguration
         ifName = config.getProperty('profileInterface', 'IGSCoreProfile')
-        assert hasattr(profileSchemas, ifName), \
-            'Interface "%s" not found.' % ifName
+        if not hasattr(profileSchemas, ifName):
+            raise ProfileNotFound('Interface "{0}" not found.'.format(ifName))
 
         # --=mpj17=-- Sometimes profileInterface is set to ''
         ifName = ifName if ifName else 'IGSCoreProfile'
