@@ -1,0 +1,180 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="context/@@groupserver_layout/page">
+  <head>
+    <title metal:fill-slot="title">
+      Invite by CSV:
+      <tal:block
+        replace="string:${view/groupInfo/name}: ${view/siteInfo/name}"/>
+    </title>
+    <!--TODO: Metadata-->
+    <tal:block metal:fill-slot="metadata">
+      <link rel="up" href="/" title="Site Home"
+            tal:attributes="title string:${view/siteInfo/name} Home;"/>
+      <tal:block
+        replace="structure provider:groupserver.GroupHomepageMetadata">
+        The metadata for the Group page.
+      </tal:block>
+    </tal:block>
+  </head>
+  <body>
+    <ul metal:fill-slot="breadcrumb">
+      <li>
+        <a href="/" class="icon-alone">
+          <span aria-hidden="true" data-icon="&#x2302;"></span>
+          <span class="screen-reader-text">Site home page</span>
+        </a>
+      </li>
+      <li>
+        <a class="group"
+              tal:attributes="href view/groupInfo/relativeURL;">
+          <strong tal:content="view/groupInfo/name">This group</strong>
+        </a>
+      </li>
+      <li>
+        Invite by CSV
+      </li>
+    </ul>
+    <div id="gs-group-member-invite-csv" role="main"
+         aria-labelledby="gs-group-member-invite-csv-h"
+         metal:fill-slot="body">
+      <h1>Invite by CSV</h1>
+      <div id="gs-group-member-invite-csv-form">
+        <section id="gs-group-member-invite-csv-columns">
+          <h2>Columns</h2>
+          <p class="muted">
+            First, specify the columns.
+            The
+            <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
+            file  <strong>must</strong> have the <em>Email address</em>
+            as the first column, and <em>Name</em> as the second column;
+            you may specify other columns.
+            The template, below, provides an example.
+          </p>
+          <table>
+            <colgroup id="gs-group-member-invite-csv-columns-required"
+                      style="border-right: thin solid black;background:#ebebeb;">
+              <col id="gs-group-member-invite-csv-columns-row"/>
+              <col id="gs-group-member-invite-csv-columns-email" />
+              <col id="gs-group-member-invite-csv-columns-fn" />
+            </colgroup>
+            <thead>
+              <tr style="border-bottom: thin solid black;">
+                <th></th>
+                <th colspan="2" class="text-center">Required</th>
+                <th class="text-center">Optional</th>
+              </tr>
+            </thead>
+            <tbody id="gs-group-member-invite-csv-columns-spec">
+              <tr>
+                <th></th>
+                <th>A</th>
+                <th>B</th>
+                <td rowspan="3">
+                  <div class="btn-group">
+                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                      <span class="muted">&#10010;</span> Add
+                      <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li><a href="#" style="text-decoration:none;">Timezone</a></li>
+                      <li><a href="#" style="text-decoration:none;">Role</a></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>Email address</td>
+                <td>Name</td>
+              </tr>
+              <tr>
+                <th>2</th>
+                <td><code>a.person@example.com</code></td>
+                <td>A. Person</td>
+              </tr>
+            </tbody>
+          </table>
+          <p id="gs-group-member-invite-csv-columns-template">
+            <a data-icon="&#xe002;" type="text/csv"
+               class="btn btn-mini"><code>template.csv</code></a>
+          </p>
+        </section><!--gs-group-member-invite-csv-columns-->
+        <section id="gs-group-member-invite-csv-file"
+             class="form-widget required">
+          <label>File</label>
+          <input type="file" accept=".csv"
+                 name="form.file" id="form.file"/>
+        </section><!--gs-group-member-invite-csv-file-->
+        <div class="buttons">
+          <div class="formelementbutton">
+            <input type="submit" class="button btn" value="Invite"
+                   name="form.actions.invite" id="form.actions.invite" />
+          </div>
+        </div><!--buttons-->
+      </div><!--gs-group-member-invite-csv-form-->
+      <div id="gs-group-member-invite-csv-feedback"
+           aria-labelledby="gs-group-member-invite-csv-feedback-h">
+        <h2 id="gs-group-member-invite-csv-feedback-h">
+          Processing <code>csv.file</code>
+        </h2>
+        <section id="gs-group-member-invite-csv-feedback--checking">
+          <h3>&#x2714; Checking</h3>
+          <p class="muted">
+            The
+            <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
+            file is being checked &#8213; to ensure that there are the
+            right number of columns, for example.
+            (Technically, this step is called <q>parsing</q>.)
+            Once the file has been checked then the people specified in the
+            file will be invited.
+          </p>
+        </section><!--gs-group-member-invite-csv-feedback-checking-->
+        <section id="gs-group-member-invite-csv-feedback-inviting">
+          <h3>
+            <span data-icon="&#xe619;" aria-hidden="true"
+                  class="loading"> </span>
+            Inviting
+          </h3>
+          <p class="small">
+            Inviting <code>foo@example.com</code> (18/90)
+          </p>
+          <div class="progress">
+            <div class="bar bar-progress" style="width: 20%;"></div>
+          </div><!--progress-->
+          <section id="gs-group-member-invite-csv-feedback-inviting-success">
+            <h4>Invited</h4>
+            <ul>
+              <li>Bar <code>bar@example.com</code>: created profile and
+                invited.</li>
+              <li>Wibble <code>wibble@example.com</code>: invited person with
+                an existing profile.</li>
+            </ul>
+          </section><!--gs-group-member-invite-csv-feedback-inviting-success-->
+          <section id="gs-group-member-invite-csv-feedback-inviting-ignored">
+            <h4>Ignored</h4>
+            <ul>
+              <li>The first row was assumed to be a header.</li>
+              <li>Michael JasonSmith <code>mpj17@onlinegroups.net</code> is
+                already a member.
+            </ul>
+          </section>
+          <section id="gs-group-member-invite-csv-feedback-inviting-problems">
+            <h4>Problems</h4>
+            <ul>
+              <li>
+                <strong>Row 4:</strong>
+                <code>blarg</code> is not a valid email address.
+              </li>
+              <li>
+                <strong>Row 12:</strong>
+                Missing Name for <code>qux@example.com</code>
+              </li>
+            </ul>
+          </section><!--gs-group-member-invite-csv-feedback-inviting-problems-->
+        </section><!--gs-group-member-invite-csv-feedback-inviting-->
+      </div><!--gs-group-member-invite-csv-feedback-->
+    </div><!--gs-group-member-invite-csv-->
+  </body>
+</html>
