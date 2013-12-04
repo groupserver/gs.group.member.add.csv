@@ -172,8 +172,7 @@ function TemplateGenerator(attributes) {
         generate: function () {
             var s=null,a=null;
             s = URL + encodeURI(header_row()+'\n'+example_row());
-            // Thanks to
-            // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+            // Thanks to <http://stackoverflow.com/questions/17836273/>
             // For some this fails with jQuery, so do it ol' skool.
             a = document.createElement('a');
             a.href = s;
@@ -186,14 +185,28 @@ function TemplateGenerator(attributes) {
     }
 }
 
+function ParserAJAX (attributes) {
+    return {
+        parse: function(callback) {
+            var attributeIds=null;
+            attributeIds = attributes.get_properties();
+            console.log(attributeIds);
+        }
+    }
+}
+
 jQuery(window).load(function () {
-    var menuSelector=null, tableSelector=null, attributes=null,tg=null;
+    var ms=null, ts=null, attributes=null, templateGenerator=null,
+    parser=null;
 
-    menuSelector = '.dropdown-menu';
-    tableSelector = '#gs-group-member-invite-csv-columns-table';
-    attributes = GSInviteByCSVOptionalAttributes(tableSelector, menuSelector);
+    ms = '.dropdown-menu';
+    ts = '#gs-group-member-invite-csv-columns-table';
+    attributes = GSInviteByCSVOptionalAttributes(ts, ms);
 
-    tg = TemplateGenerator(attributes);
+    templateGenerator = TemplateGenerator(attributes);
     jQuery('#gs-group-member-invite-csv-columns-template .btn')
-        .click(tg.generate);
+        .click(templateGenerator.generate);
+
+    parser = ParserAJAX(attributes);
+    jQuery('#form\\.actions\\.invite').click(parser.parse);
 });
