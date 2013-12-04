@@ -9,7 +9,17 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         return lastLabel.text();
     }
 
-    function colgroupSpanIncr(val) {
+    function new_label_cell(id, label) {
+        var retval=null, btn=null;
+        retval = jQuery('<th class="slide col-label '+id+'" data-menu-item="'+
+                       id+'">'+label+' </th>');
+        btn = jQuery('<a class="muted small">(remove)</a>');
+        btn.click(column_remove_clicked);
+        retval.append(btn);
+        return retval
+   }
+
+    function colgroup_span_incr(val) {
         var cg=null;
         cg = jQuery('#gs-group-member-invite-csv-columns-optional');
         cg.attr('span', (parseInt(cg.attr('span'))+val).toString());
@@ -21,13 +31,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         oldColLabel = get_most_recent_optional_column_label();
         newColLabel = String.fromCharCode(oldColLabel.charCodeAt(0) + 1);
 
-        label = jQuery('<th class="slide col-label '+id+'" data-menu-item="'+
-                       id+'">'+newColLabel+' </th>');
-
-        btn = jQuery('<a class="muted small">(remove)</a>');
-        btn.click(column_remove_clicked);
-        label.append(btn);
-
+        label = new_label_cell(id, newColLabel);
         // The Add-selector is actually the last cell in the row.
         labels.find('td:last').before(label);
 
@@ -38,7 +42,8 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
                          +name+'</td>');
         examples.find(':last').after(example);
 
-        colgroupSpanIncr(1);
+        colgroup_span_incr(1);
+        get_properties_from_cells();
     }
 
     function menu_option_clicked(event) {
@@ -74,7 +79,18 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         i = row.index(cell)+2;
         del_col(i);
 
-        colgroupSpanIncr(-1);
+        colgroup_span_incr(-1);
+    }
+
+    function get_properties_from_cells() {
+        var cells=null, retval=null;
+        cells = table.find('.col-label');
+        retval = jQuery.map(cells, function(c, i){
+            var r =null;
+            r = jQuery(c).attr('data-menu-item');
+            return r
+        });
+        return retval;
     }
 
     function init() {
@@ -92,13 +108,14 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
 
     return {
         get_properties: function () {
+            return get_properties_from_cells();
         }
     }
 }
 
 jQuery(window).load(function () {
-    var menuSelector=null, tableSelector=null;
+    var menuSelector=null, tableSelector=null, attributes=null;
     menuSelector = '.dropdown-menu';
     tableSelector = '#gs-group-member-invite-csv-columns-table';
-    GSInviteByCSVOptionalAttributes(tableSelector, menuSelector);
+    attributes = GSInviteByCSVOptionalAttributes(tableSelector, menuSelector);
 });

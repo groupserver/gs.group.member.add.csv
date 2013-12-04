@@ -72,8 +72,8 @@
             <tbody class="specification">
               <tr class="labels">
                 <th></th>
-                <th class="col-label email">A</th>
-                <th class="col-label fn">B</th>
+                <th class="col-label email" data-menu-item="email">A</th>
+                <th class="col-label fn" data-menu-item="fn">B</th>
                 <td rowspan="3"
                     id="gs-group-member-invite-csv-columns-spec-optional"
                     tal:condition="view/optionalProperties">
