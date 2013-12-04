@@ -9,8 +9,14 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         return lastLabel.text();
     }
 
+    function colgroupSpanIncr(val) {
+        var cg=null;
+        cg = jQuery('#gs-group-member-invite-csv-columns-optional');
+        cg.attr('span', (parseInt(cg.attr('span'))+val).toString());
+    }
+
     function add_column(id, name) {
-        var newColLabel=null, btn=null, newColLabel=null, cg=null,
+        var newColLabel=null, btn=null, newColLabel=null
             label=null, title=null, example=null;
         oldColLabel = get_most_recent_optional_column_label();
         newColLabel = String.fromCharCode(oldColLabel.charCodeAt(0) + 1);
@@ -32,8 +38,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
                          +name+'</td>');
         examples.find(':last').after(example);
 
-        cg = jQuery('#gs-group-member-invite-csv-columns-optional');
-        cg.attr('span', (parseInt(cg.attr('span'))+1).toString());
+        colgroupSpanIncr(1);
     }
 
     function menu_option_clicked(event) {
@@ -69,7 +74,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         i = row.index(cell)+2;
         del_col(i);
 
-        // TODO: Change the span on the colgroup
+        colgroupSpanIncr(-1);
     }
 
     function init() {
