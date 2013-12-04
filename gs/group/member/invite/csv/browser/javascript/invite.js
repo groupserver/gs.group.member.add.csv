@@ -15,8 +15,8 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         oldColLabel = get_most_recent_optional_column_label();
         newColLabel = String.fromCharCode(oldColLabel.charCodeAt(0) + 1);
 
-        label = jQuery('<th class="slide col-label '+id+'">'
-                       +newColLabel+' </th>');
+        label = jQuery('<th class="slide col-label '+id+'" data-menu-item="'+
+                       id+'">'+newColLabel+' </th>');
 
         btn = jQuery('<a class="muted small">(remove)</a>');
         btn.click(column_remove_clicked);
@@ -55,12 +55,16 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     }
 
     function column_remove_clicked (event) {
-        var t=null, cell=null, row=null, i=null;
-
-        // TODO: Make the menu item selectable again.
+        var t=null, cell=null, menuItemId=null, menuItem=null, row=null,
+            i=null;
 
         t = jQuery(event.target);
         cell = t.parent('th');
+
+        menuItemId = cell.attr('data-menu-item');
+        menuItem = jQuery('#'+menuItemId);
+        menuItem.parent().removeClass('disabled');
+
         row = jQuery('.col-label');
         i = row.index(cell)+2;
         del_col(i);
