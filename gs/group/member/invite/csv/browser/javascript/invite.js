@@ -86,8 +86,32 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         var cells=null, retval=null;
         cells = table.find('.col-label');
         retval = jQuery.map(cells, function(c, i){
-            var r =null;
+            var r=null;
             r = jQuery(c).attr('data-menu-item');
+            return r
+        });
+        return retval;
+    }
+
+    function get_titles_from_cells() {
+        var cells=null, retval=null;
+        cells = table.find('.col-label');
+        retval = jQuery.map(cells, function(c, i){
+            var id=null, r=null;
+            id = jQuery(c).attr('data-menu-item');
+            r = titles.find('.'+id).text();
+            return r
+        });
+        return retval;
+    }
+
+    function get_egs_from_cells() {
+        var cells=null, retval=null;
+        cells = table.find('.col-label');
+        retval = jQuery.map(cells, function(c, i){
+            var id=null, r=null;
+            id = jQuery(c).attr('data-menu-item');
+            r = examples.find('.'+id).text();
             return r
         });
         return retval;
@@ -109,25 +133,55 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     return {
         get_properties: function () {
             return get_properties_from_cells();
+        },
+        get_titles: function() {
+            return get_titles_from_cells();
+        },
+        get_examples: function() {
+            return get_egs_from_cells();
         }
     }
 }
 
 function TemplateGenerator(attributes) {
-
     var URL='data:text/csv;charset=utf-8,';
 
-    function header_row() {
+    function array_to_row(arr) {
         var retval=null;
-        retval = attributes.get_properties().join(',');
-        return retval
+        retval = jQuery.map(arr, function(v, i) {
+            return '"'+v+'"';
+        }).join(',');
+        return retval;
+    }
+
+    function header_row() {
+        var titles=null, retval=null;
+        titles = attributes.get_titles();
+        retval = array_to_row(titles);
+        return retval;
+    }
+
+    function example_row() {
+        var egs=null, retval=null;
+        egs = attributes.get_examples();
+        retval = array_to_row(egs);
+        return retval;
     }
 
     return {
         generate: function () {
-            var s=null;
-            s = URL + encodeURI(header_row());
-            window.open(s);
+            var s=null,a=null;
+            s = URL + encodeURI(header_row()+'\n'+example_row());
+            // Thanks to
+            // http://stackoverflow.com/questions/17836273/export-javascript-data-to-csv-file-without-server-interaction
+            // For some this fails with jQuery, so do it ol' skool.
+            a = document.createElement('a');
+            a.href = s;
+            a.style = 'display:none;';
+            a.target = '_blank';
+            a.download = 'template.csv';
+            document.body.appendChild(a);
+            a.click();
         }
     }
 }

@@ -98,18 +98,18 @@
               </tr>
               <tr class="titles">
                 <th>1</th>
-                <td>Email address</td>
-                <td>Name</td>
+                <td class="email">Email address</td>
+                <td class="fn">Name</td>
               </tr>
               <tr class="examples">
                 <th>2</th>
-                <td><code>a.person@example.com</code></td>
-                <td>A. Person</td>
+                <td><code class="email">a.person@example.com</code></td>
+                <td class="fn">A. Person</td>
               </tr>
             </tbody>
           </table>
           <p id="gs-group-member-invite-csv-columns-template">
-            <a data-icon="&#xe002;" type="text/csv"
+            <a data-icon="&#xe002;" type="text/csv" download="template.csv"
                class="btn btn-mini"><code>template.csv</code></a>
           </p>
         </section><!--gs-group-member-invite-csv-columns-->
