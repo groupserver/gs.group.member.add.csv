@@ -49,16 +49,19 @@
             <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
             file  <strong>must</strong> have the <em>Email address</em>
             as the first column, and <em>Name</em> as the second column;
-            you may specify other columns.
+            you may add other columns.
             The template, below, provides an example.
           </p>
-          <table>
-            <colgroup id="gs-group-member-invite-csv-columns-required"
+          <table id="gs-group-member-invite-csv-columns-table">
+            <colgroup class="required"
                       style="border-right: thin solid black;background:#ebebeb;">
               <col id="gs-group-member-invite-csv-columns-row"/>
               <col id="gs-group-member-invite-csv-columns-email" />
               <col id="gs-group-member-invite-csv-columns-fn" />
             </colgroup>
+            <colgroup id="gs-group-member-invite-csv-columns-optional"
+                      class="optional"
+                      span="1" />
             <thead>
               <tr style="border-bottom: thin solid black;">
                 <th></th>
@@ -66,30 +69,39 @@
                 <th class="text-center">Optional</th>
               </tr>
             </thead>
-            <tbody id="gs-group-member-invite-csv-columns-spec">
-              <tr>
+            <tbody class="specification">
+              <tr class="labels">
                 <th></th>
-                <th>A</th>
-                <th>B</th>
-                <td rowspan="3">
+                <th class="col-label email">A</th>
+                <th class="col-label fn">B</th>
+                <td rowspan="3"
+                    id="gs-group-member-invite-csv-columns-spec-optional"
+                    tal:condition="view/optionalProperties">
                   <div class="btn-group">
-                    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    <a class="btn dropdown-toggle"
+                       data-toggle="dropdown" href="#">
                       <span class="muted">&#10010;</span> Add
                       <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                      <li><a href="#" style="text-decoration:none;">Timezone</a></li>
-                      <li><a href="#" style="text-decoration:none;">Role</a></li>
+                      <tal:block repeat="property view/optionalProperties">
+                        <li>
+                          <a href="#"
+                             tal:attributes="id property/token"
+                             tal:content="property/title"
+                             style="text-decoration:none;">Timezone</a>
+                        </li>
+                      </tal:block>
                     </ul>
                   </div>
                 </td>
               </tr>
-              <tr>
+              <tr class="titles">
                 <th>1</th>
                 <td>Email address</td>
                 <td>Name</td>
               </tr>
-              <tr>
+              <tr class="examples">
                 <th>2</th>
                 <td><code>a.person@example.com</code></td>
                 <td>A. Person</td>
@@ -157,7 +169,7 @@
             <ul>
               <li>The first row was assumed to be a header.</li>
               <li>Michael JasonSmith <code>mpj17@onlinegroups.net</code> is
-                already a member.
+                already a member.</li>
             </ul>
           </section>
           <section id="gs-group-member-invite-csv-feedback-inviting-problems">
@@ -176,5 +188,8 @@
         </section><!--gs-group-member-invite-csv-feedback-inviting-->
       </div><!--gs-group-member-invite-csv-feedback-->
     </div><!--gs-group-member-invite-csv-->
+    <script metal:fill-slot="javascript" type="text/javascript"
+            src="/++resource++gs-group-member-invite-csv.js"
+            defer="true"> </script>
   </body>
 </html>
