@@ -1,7 +1,7 @@
 jQuery.noConflict();
 
 function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
-    var table=null, optionalMenu=null;
+    var table=null, labels=null, titles=null, examples=null, optionalMenu=null;
 
     function get_most_recent_optional_column_label() {
         var lastLabel=null;
@@ -10,24 +10,25 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     }
 
     function add_column(id, name) {
-        var newColLabel=null, newColLabel=null, cg=null,
-            label=null, title=null, example=null,
-            labels=null, titles=null, examples=null;
+        var newColLabel=null, btn=null, newColLabel=null, cg=null,
+            label=null, title=null, example=null;
         oldColLabel = get_most_recent_optional_column_label();
         newColLabel = String.fromCharCode(oldColLabel.charCodeAt(0) + 1);
 
-        labels = table.find('.labels');
         label = jQuery('<th class="slide col-label '+id+'">'
-                       +newColLabel+'</th>');
+                       +newColLabel+' </th>');
+
+        btn = jQuery('<a class="muted small">(remove)</a>');
+        btn.click(column_remove_clicked);
+        label.append(btn);
+
         // The Add-selector is actually the last cell in the row.
         labels.find('td:last').before(label);
 
-        titles = table.find('.titles');
         title = jQuery('<td class="slide '+id+'">'+name+'</td>');
         titles.find(':last').after(title);
 
-        examples = table.find('.examples');
-        example = jQuery('<td class="muted slide '+id+'">Example '
+       example = jQuery('<td class="muted slide '+id+'">Example '
                          +name+'</td>');
         examples.find(':last').after(example);
 
@@ -45,6 +46,28 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         t.parent().addClass('disabled');
     }
 
+    function del_col(index) {
+        var i=null;
+        i = index.toString();
+        labels.find('th:nth-child('+i+')').remove();
+        titles.find(':nth-child('+i+')').remove();
+        examples.find(':nth-child('+i+')').remove();
+    }
+
+    function column_remove_clicked (event) {
+        var t=null, cell=null, row=null, i=null;
+
+        // TODO: Make the menu item selectable again.
+
+        t = jQuery(event.target);
+        cell = t.parent('th');
+        row = jQuery('.col-label');
+        i = row.index(cell)+2;
+        del_col(i);
+
+        // TODO: Change the span on the colgroup
+    }
+
     function init() {
         optionalMenu = jQuery(optionalMenuSelector);
         optionalMenu.find('a')
@@ -52,11 +75,15 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
             .click(menu_option_clicked);
 
         table = jQuery(tableSelector);
+        labels = table.find('.labels');
+        titles = table.find('.titles');
+        examples = table.find('.examples');
     }
     init();  // Note: automatic execution
 
     return {
-        get_optional_attributes: function () {}
+        get_properties: function () {
+        }
     }
 }
 
