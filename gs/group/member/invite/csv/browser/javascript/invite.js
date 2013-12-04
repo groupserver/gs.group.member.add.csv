@@ -113,9 +113,33 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     }
 }
 
+function TemplateGenerator(attributes) {
+
+    var URL='data:text/csv;charset=utf-8,';
+
+    function header_row() {
+        var retval=null;
+        retval = attributes.get_properties().join(',');
+        return retval
+    }
+
+    return {
+        generate: function () {
+            var s=null;
+            s = URL + encodeURI(header_row());
+            window.open(s);
+        }
+    }
+}
+
 jQuery(window).load(function () {
-    var menuSelector=null, tableSelector=null, attributes=null;
+    var menuSelector=null, tableSelector=null, attributes=null,tg=null;
+
     menuSelector = '.dropdown-menu';
     tableSelector = '#gs-group-member-invite-csv-columns-table';
     attributes = GSInviteByCSVOptionalAttributes(tableSelector, menuSelector);
+
+    tg = TemplateGenerator(attributes);
+    jQuery('#gs-group-member-invite-csv-columns-template .btn')
+        .click(tg.generate);
 });
