@@ -42,11 +42,10 @@ class ICsv(Interface):
             description='The CSV file to be processed.',
             required=True)
 
+    # TODO: Check for the required attributes
     columns = List(title='Columns',
                 description='The columns in the CSV.',
                 value_type=Choice(title='Profile attribute',
                                     vocabulary='ProfileAttributes'),
                 unique=True,
                 required=True)
-
-    #columns = Text(title='c', required=False)
