@@ -54,10 +54,14 @@
           </p>
           <table id="gs-group-member-invite-csv-columns-table">
             <colgroup class="required"
-                      style="border-right: thin solid black;background:#ebebeb;">
-              <col id="gs-group-member-invite-csv-columns-row"/>
-              <col id="gs-group-member-invite-csv-columns-email" />
-              <col id="gs-group-member-invite-csv-columns-fn" />
+                      tal:define="idp string:gs-group-member-invite-csv-cols"
+                      style="border-right: thin solid black;
+                             background:#ebebeb;">
+              <col id="gs-group-member-invite-csv-cols-row"/>
+              <tal:block repeat="p view/requiredProperties">
+                <col id="gs-group-member-invite-csv-columns"
+                     tal:attributes="id string:${idp}-${p/token}"/>
+              </tal:block>
             </colgroup>
             <colgroup id="gs-group-member-invite-csv-columns-optional"
                       class="optional"
@@ -65,15 +69,23 @@
             <thead>
               <tr style="border-bottom: thin solid black;">
                 <th></th>
-                <th colspan="2" class="text-center">Required</th>
+                <th colspan="2"
+                    tal:attributes="colspan python:len(view.requiredProperties)"
+                    class="text-center">Required</th>
                 <th class="text-center">Optional</th>
               </tr>
             </thead>
             <tbody class="specification">
               <tr class="labels">
                 <th></th>
-                <th class="col-label email" data-menu-item="email">A</th>
-                <th class="col-label fn" data-menu-item="fn">B</th>
+                <tal:block repeat="p view/requiredProperties">
+                  <th class="col-label" data-menu-item="email"
+                      tal:attributes="data-menu-item p/token;
+                                      class string:col-label ${p/token};"
+                      tal:define="n repeat/p/number;
+                                  c python:64+n"
+                      tal:content="python:chr(c)">A</th>
+                </tal:block>
                 <td rowspan="3"
                     id="gs-group-member-invite-csv-columns-spec-optional"
                     tal:condition="view/optionalProperties">
@@ -98,13 +110,28 @@
               </tr>
               <tr class="titles">
                 <th>1</th>
-                <td class="email">Email address</td>
-                <td class="fn">Name</td>
+                <tal:block repeat="p view/requiredProperties">
+                  <td class="email"
+                      tal:attributes="class string:col-title ${p/token}"
+                      tal:content="p/title">Email address</td>
+                </tal:block>
               </tr>
               <tr class="examples">
                 <th>2</th>
-                <td><code class="email">a.person@example.com</code></td>
-                <td class="fn">A. Person</td>
+                <tal:block repeat="p view/requiredProperties">
+                  <td tal:condition="python:p.token=='email'" class="col-eg">
+                    <code class="email">a.person@example.com</code>
+                  </td>
+                  <td tal:condition="python:p.token=='fn'" class="col-eg fn">
+                    A. Person
+                  </td>
+                  <td tal:condition="python:p.token not in ('email', 'fn')"
+                      class="col-eg"
+                      tal:attributes="class string:col-eg ${p/token};"
+                      tal:content="string:Example ${p/title}">
+                    Example Data
+                  </td>
+                </tal:block>
               </tr>
             </tbody>
           </table>

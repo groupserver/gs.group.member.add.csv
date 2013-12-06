@@ -35,7 +35,7 @@ class ProfileList(object):
     @Lazy
     def properties(self):
         retval = ODict()
-        retval['email'] = EmailAddress(title='Email to',
+        retval['email'] = EmailAddress(title='Email',
                             description='The email address of the new member')
         ifs = getFieldsInOrder(self.schema)
         for interface in ifs:
@@ -60,9 +60,7 @@ class ProfileList(object):
             raise ProfileNotFound('Interface "{0}" not found.'.format(ifName))
 
         # --=mpj17=-- Sometimes profileInterface is set to ''
-        ifName = ifName if ifName else 'IGSCoreProfile'
-        retval = '%sAdminJoinCSV' % ifName
-
+        retval = ifName if ifName else 'IGSCoreProfile'
         if retval is None:
             raise TypeError('retval is None')
         if not hasattr(profileSchemas, retval):
