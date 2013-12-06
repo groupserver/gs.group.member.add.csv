@@ -28,7 +28,6 @@ class CSV2JSON(GroupEndpoint):
 
     def __init__(self, group, request):
         super(CSV2JSON, self).__init__(group, request)
-        print request.form
 
     @Lazy
     def form_fields(self):
