@@ -12,11 +12,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from __future__ import absolute_import
-from zope.cachedescriptors.property import Lazy
+from __future__ import absolute_import, unicode_literals
 from zope.interface.interface import Interface
-from zope.schema import Bytes, List, ValidationError
-from .profilelist import ProfileList
+from zope.schema import Choice, List, ValidationError  # Bytes,
 
 
 class RequiredAttributeMissingError(ValidationError):
@@ -26,7 +24,7 @@ class RequiredAttributeMissingError(ValidationError):
         self.value = value
 
     def __unicode__(self):
-        m = u'The required attribute {0} is missing'
+        m = 'The required attribute {0} is missing'
         retval = m.format(self.value)
         return retval
 
@@ -38,27 +36,17 @@ class RequiredAttributeMissingError(ValidationError):
         return str(self)
 
 
-class ProfilesList(List):
-
-    @Lazy
-    def profileList(self):
-        retval = ProfileList(self.context)
-        return retval
-
-    def constraint(self, value):
-        required = [attr.id for attr in self.profileList if attr.required]
-        for attr in required:
-            if attr not in value:
-                raise RequiredAttributeMissingError(attr)
-        return True
-
-
 class ICsv(Interface):
     """ Schema for processing a CSV file. """
-    csv = Bytes(title=u"CSV File",
-            description=u'The CSV file to be processed.',
-            required=True)
+    #csv = Bytes(title="CSV File",
+            #description='The CSV file to be processed.',
+            #required=True)
 
-    columns = List(title=u'Columns',
-                description=u'The columns in the CSV.',
+    columns = List(title='Columns',
+                description='The columns in the CSV.',
+                value_type=Choice(title='Profile attribute',
+                                    vocabulary='ProfileAttributes'),
+                unique=True,
                 required=True)
+
+    #columns = Text(title='c', required=False)

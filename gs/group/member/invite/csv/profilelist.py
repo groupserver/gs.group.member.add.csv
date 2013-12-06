@@ -12,28 +12,42 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from zope.app.apidoc.interface import getFieldsInOrder
 from zope.cachedescriptors.property import Lazy
 from zope.interface.common.mapping import IEnumerableMapping
-from zope.interface import implements, providedBy
 from zope.schema.vocabulary import SimpleTerm
-from zope.schema.interfaces import IVocabulary, IVocabularyTokenized, \
-    ITitledTokenizedTerm
 from zope.schema import *  # FIXME: Delete
+from gs.profile.email.base.emailaddress import EmailAddress
 from Products.GSProfile import interfaces as profileSchemas
 from Products.XWFCore.odict import ODict
 from .error import GlobalConfigError, ProfileNotFound
 
 
 class ProfileList(object):
-    implements(IVocabulary, IVocabularyTokenized)
     __used_for__ = IEnumerableMapping
 
     def __init__(self, context):
         if not context:
             raise ValueError('There is no context')
         self.context = context
+
+    @Lazy
+    def properties(self):
+        retval = ODict()
+        retval['email'] = EmailAddress(title='Email to',
+                            description='The email address of the new member')
+        ifs = getFieldsInOrder(self.schema)
+        for interface in ifs:
+            key = unicode(interface[0])
+            retval[key] = interface[1]
+        assert isinstance(retval, ODict)
+        assert retval
+        return retval
+
+    def property_to_token(self, p):
+        retval = SimpleTerm(p, p, self.properties[p].title)
+        return retval
 
     @Lazy
     def profileSchemaName(self):
@@ -49,9 +63,10 @@ class ProfileList(object):
         ifName = ifName if ifName else 'IGSCoreProfile'
         retval = '%sAdminJoinCSV' % ifName
 
-        assert retval is not None, 'retval is None'
-        assert hasattr(profileSchemas, retval), \
-            'Interface "%s" not found.' % retval
+        if retval is None:
+            raise TypeError('retval is None')
+        if not hasattr(profileSchemas, retval):
+            raise ValueError('Interface "{0}" not found.'.format(retval))
         return retval
 
     @Lazy
@@ -61,10 +76,8 @@ class ProfileList(object):
     def __iter__(self):
         """See zope.schema.interfaces.IIterableVocabulary"""
         for p in list(self.properties.keys()):
-            retval = SimpleTerm(self.properties[p], p, self.properties[p].title)
+            retval = self.property_to_token(p)
             assert retval
-            assert ITitledTokenizedTerm in providedBy(retval)
-            assert retval.value.title == retval.title
             yield retval
 
     def __len__(self):
@@ -87,22 +100,9 @@ class ProfileList(object):
 
     def getTermByToken(self, token):
         """See zope.schema.interfaces.IVocabularyTokenized"""
-        for p in self.properties:
+        for p in self.properties.keys():
             if p == token:
-                retval = SimpleTerm(self.properties[p], p,
-                                    self.properties[p].title)
+                retval = self.property_to_token(p)
                 assert retval
-                assert ITitledTokenizedTerm in providedBy(retval)
-                assert retval.token == retval.value
                 return retval
         raise LookupError(token)
-
-    @Lazy
-    def properties(self):
-        retval = ODict()
-        ifs = getFieldsInOrder(self.schema)
-        for interface in ifs:
-            retval[interface[0]] = interface[1]
-        assert isinstance(retval, ODict)
-        assert retval
-        return retval

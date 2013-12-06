@@ -29,5 +29,12 @@ class CSVUploadUI(GroupPage):
 
     @Lazy
     def optionalProperties(self):
-        retval = [p for p in self.profileList if not p.value.required]
+        retval = [p for p in self.profileList
+                    if not self.profileList.properties[p.token].required]
+        return retval
+
+    @Lazy
+    def requiredProperties(self):
+        retval = [p for p in self.profileList
+                    if self.profileList.properties[p.token].required]
         return retval

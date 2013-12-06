@@ -17,33 +17,39 @@ from json import dumps as to_json
 from zope.cachedescriptors.property import Lazy
 from zope.formlib import form as formlib
 from gs.content.form.api.json import GroupEndpoint
+from gs.content.form import multi_check_box_widget
 from .interface import ICsv
-from .unicodereader import UnicodeDictReader
+# from .unicodereader import UnicodeDictReader
 
 
 class CSV2JSON(GroupEndpoint):
+    label = 'POST CSV data to this URL to parse it, and transform it into ' \
+            'a JSON object.'
 
     def __init__(self, group, request):
         super(CSV2JSON, self).__init__(group, request)
+        print request.form
 
     @Lazy
     def form_fields(self):
         retval = formlib.Fields(ICsv, render_context=False)
+        retval['columns'].custom_widget = multi_check_box_widget
         assert retval
         return retval
 
     @formlib.action(label='Submit', prefix='', failure='process_failure')
     def process_success(self, action, data):
-        csv = data['csv']
+        #csv = data['csv']
         cols = data['columns']
         # TODO: Delivery?
 
-        reader = UnicodeDictReader(csv, cols)
-        reader.next()  # Skip the first row (the header)
-        profiles = []
-        for row in reader:
-            profiles.append(row)
-        retval = to_json(profiles)
+        #reader = UnicodeDictReader(csv, cols)
+        #reader.next()  # Skip the first row (the header)
+        #profiles = []
+        #for row in reader:
+        #    profiles.append(row)
+        #retval = to_json(profiles)
+        retval = to_json(cols)
         return retval
 
     def process_failure(self, action, data, errors):
