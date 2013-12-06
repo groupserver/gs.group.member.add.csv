@@ -186,11 +186,48 @@ function TemplateGenerator(attributes) {
 }
 
 function ParserAJAX (attributes) {
+    var URL='csv.json';
+
+    function success (data, textStatus, jqXHR) {
+        console.log(textStatus);
+    }
+
+    function error(jqXHR, textStatus, errorThrown) {
+        console.log(errorThrown);
+    }
+
     return {
         parse: function(callback) {
-            var attributeIds=null;
+            var attributeIds=null, d=null, settings=null;
             attributeIds = attributes.get_properties();
-            console.log(attributeIds);
+            // To be able to submit a file (sanely) using AJAX we have to
+            // use a FormData object. Because of this the page requires
+            // HTML5: Chrome 7, Firefox 4, IE 10, Opera 12, Safari 5
+            // <https://developer.mozilla.org/en-US/docs/Web/API/FormData>
+            d = new FormData();
+            d.append('submit', '');
+            jQuery.each(attributeIds, function(i, attr) {
+                d.append('columns', attr);
+            });
+            // jQuery.post(URL, d, success, 'application/json');
+            settings = {
+                accepts: 'application/json',
+                async: true,
+                cache: false,
+                contentType: false,
+                crossDomain: false,
+                data: d,
+                dataType: 'json',
+                error: error,
+                headers: {},
+                processData: false,  // No jQuery, put the data down.
+                success: success,
+                traditional: true,
+                // timeout: TODO, What is the sane timeout?
+                type: 'POST',
+                url: URL,
+            }
+            jQuery.ajax(settings)
         }
     }
 }
