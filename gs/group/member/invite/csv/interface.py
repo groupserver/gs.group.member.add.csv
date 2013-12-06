@@ -14,7 +14,7 @@
 ##############################################################################
 from __future__ import absolute_import, unicode_literals
 from zope.interface.interface import Interface
-from zope.schema import Choice, List, ValidationError  # Bytes,
+from zope.schema import Bytes, Choice, List, ValidationError
 
 
 class RequiredAttributeMissingError(ValidationError):
@@ -37,10 +37,10 @@ class RequiredAttributeMissingError(ValidationError):
 
 
 class ICsv(Interface):
-    """ Schema for processing a CSV file. """
-    #csv = Bytes(title="CSV File",
-            #description='The CSV file to be processed.',
-            #required=True)
+    """Schema for parsing a CSV file."""
+    csv = Bytes(title='CSV File',
+            description='The CSV file to be processed.',
+            required=True)
 
     columns = List(title='Columns',
                 description='The columns in the CSV.',

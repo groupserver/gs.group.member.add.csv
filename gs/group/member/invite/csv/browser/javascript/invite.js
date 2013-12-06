@@ -198,17 +198,27 @@ function ParserAJAX (attributes) {
 
     return {
         parse: function(callback) {
-            var attributeIds=null, d=null, settings=null;
-            attributeIds = attributes.get_properties();
+            var attributeIds=null, d=null, csvFile=null, settings=null;
             // To be able to submit a file (sanely) using AJAX we have to
-            // use a FormData object. Because of this the page requires
-            // HTML5: Chrome 7, Firefox 4, IE 10, Opera 12, Safari 5
+            // use a FormData object and a File object. Because of this the
+            // page requires HTML5: Chrome 13, Firefox 7, IE 10, Opera 16, and
+            // Safari 6
             // <https://developer.mozilla.org/en-US/docs/Web/API/FormData>
+            // <https://developer.mozilla.org/en-US/docs/Web/API/File>
             d = new FormData();
-            d.append('submit', '');
+            csvFile = document.getElementById('form.file').files[0];
+            d.append('csv', csvFile);
+
+            attributeIds = attributes.get_properties();
             jQuery.each(attributeIds, function(i, attr) {
+                // 'columns' is appended multiple times because it is a list.
                 d.append('columns', attr);
             });
+
+            // The ID of the button that was clicked, for zope.formlib
+            d.append('submit', '');
+
+            // The following is *mostly* a jQuery.post call:
             // jQuery.post(URL, d, success, 'application/json');
             settings = {
                 accepts: 'application/json',
