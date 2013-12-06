@@ -14,12 +14,13 @@
 ##############################################################################
 from __future__ import absolute_import, unicode_literals
 from json import dumps as to_json
+from StringIO import StringIO
 from zope.cachedescriptors.property import Lazy
 from zope.formlib import form as formlib
 from gs.content.form.api.json import GroupEndpoint
 from gs.content.form import multi_check_box_widget
 from .interface import ICsv
-# from .unicodereader import UnicodeDictReader
+from .unicodereader import UnicodeDictReader
 
 
 class CSV2JSON(GroupEndpoint):
@@ -38,17 +39,16 @@ class CSV2JSON(GroupEndpoint):
 
     @formlib.action(label='Submit', prefix='', failure='process_failure')
     def process_success(self, action, data):
-        #csv = data['csv']
         cols = data['columns']
+        csv = StringIO(data['csv'])
         # TODO: Delivery?
 
-        #reader = UnicodeDictReader(csv, cols)
-        #reader.next()  # Skip the first row (the header)
-        #profiles = []
-        #for row in reader:
-        #    profiles.append(row)
-        #retval = to_json(profiles)
-        retval = to_json(cols)
+        reader = UnicodeDictReader(csv, cols)
+        next(reader)  # Skip the first row (the header)
+        profiles = []
+        for row in reader:
+            profiles.append(row)
+        retval = to_json(profiles)
         return retval
 
     def process_failure(self, action, data, errors):
