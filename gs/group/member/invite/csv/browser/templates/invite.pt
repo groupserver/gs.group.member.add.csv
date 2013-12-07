@@ -81,10 +81,11 @@
                 <tal:block repeat="p view/requiredProperties">
                   <th class="col-label" data-menu-item="email"
                       tal:attributes="data-menu-item p/token;
-                                      class string:col-label ${p/token};"
-                      tal:define="n repeat/p/number;
-                                  c python:64+n"
-                      tal:content="python:chr(c)">A</th>
+                                      class string:col-label ${p/token};">
+                    <span class="val"
+                          tal:define="n repeat/p/number;
+                                      c python:64+n"
+                          tal:content="python:chr(c)">A</span></th>
                 </tal:block>
                 <td rowspan="3"
                     id="gs-group-member-invite-csv-columns-spec-optional"

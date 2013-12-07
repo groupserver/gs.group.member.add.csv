@@ -5,14 +5,16 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
 
     function get_most_recent_optional_column_label() {
         var lastLabel=null;
-        lastLabel = table.find('.labels .col-label:last');
+        lastLabel = table.find('.labels .col-label:last .val');
         return lastLabel.text();
     }
 
     function new_label_cell(id, label) {
         var retval=null, btn=null;
-        retval = jQuery('<th class="slide col-label '+id+'" data-menu-item="'+
-                       id+'">'+label+' </th>');
+        retval = jQuery('<th class="slide col-label optional '+
+                        id+'" data-menu-item="'+id+'"> </th>');
+        retval.append(jQuery('<span class="val">'+label+'</span>'));
+        retval.append('&#160;');
         btn = jQuery('<a class="muted small">(remove)</a>');
         btn.click(column_remove_clicked);
         retval.append(btn);
@@ -80,6 +82,16 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         del_col(i);
 
         colgroup_span_incr(-1);
+        relabel_columns();
+    }
+
+    function relabel_columns() {
+        jQuery('.col-label .val').each(function(i, l) {
+            var label=null, newColLabel = null;
+            label = jQuery(l);
+            newColLabel = String.fromCharCode(65 + i);
+            label.text(newColLabel);
+        });
     }
 
     function get_properties_from_cells() {
