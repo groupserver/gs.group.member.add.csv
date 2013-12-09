@@ -197,60 +197,95 @@ function TemplateGenerator(attributes) {
     }
 }
 
-function ParserAJAX (attributes) {
-    var URL='csv.json';
+function ParserAJAX (attributes, formSelector, feedbackSelector, 
+                     checkingSelector) {
+    var form=null, feedback=null, checking=null,
+        URL='csv.json', PARSE_SUCCESS='parse_success';
 
     function success (data, textStatus, jqXHR) {
-        console.log(textStatus);
+        var successEvent=null;
+        console.log(textStatus); // TODO: Remove
+        checking.find('.loading')
+            .removeClass('loading')
+            .attr('data-icon', '\u2714');
+
+        successEvent = jQuery.Event(PARSE_SUCCESS);
+        checking.trigger(successEvent);
     }
 
     function error(jqXHR, textStatus, errorThrown) {
         console.log(errorThrown);
     }
 
+    function show_feedback() {
+        var csvFile=null, name=null;
+
+        form.addClass('hide');
+        feedback.removeClass('hide');
+
+        csvFile = document.getElementById('form.file').files[0];
+        name = csvFile.name;
+        feedback.find('.filename').text(name);
+
+        checking.removeClass('hide');
+    }
+
+    function send_request() {
+        var attributeIds=null, d=null, csvFile=null, settings=null;
+        // To be able to submit a file (sanely) using AJAX we have to
+        // use a FormData object and a File object. Because of this the
+        // page requires HTML5: Chrome 13, Firefox 7, IE 10, Opera 16, and
+        // Safari 6
+        // <https://developer.mozilla.org/en-US/docs/Web/API/FormData>
+        // <https://developer.mozilla.org/en-US/docs/Web/API/File>
+        d = new FormData();
+        csvFile = document.getElementById('form.file').files[0];
+        d.append('csv', csvFile);
+
+        attributeIds = attributes.get_properties();
+        jQuery.each(attributeIds, function(i, attr) {
+            // 'columns' is appended multiple times because it is a list.
+            d.append('columns', attr);
+        });
+
+        // The ID of the button that was clicked, for zope.formlib
+        d.append('submit', '');
+
+        // The following is *mostly* a jQuery.post call:
+        // jQuery.post(URL, d, success, 'application/json');
+        settings = {
+            accepts: 'application/json',
+            async: true,
+            cache: false,
+            contentType: false,
+            crossDomain: false,
+            data: d,
+            dataType: 'json',
+            error: error,
+            headers: {},
+            processData: false,  // No jQuery, put the data down.
+            success: success,
+            traditional: true,
+            // timeout: TODO, What is the sane timeout?
+            type: 'POST',
+            url: URL,
+        };
+        jQuery.ajax(settings);
+    }
+
+    function init() {
+        form = jQuery(formSelector);
+        feedback = jQuery(feedbackSelector);
+        checking = jQuery(checkingSelector);
+    }
+    init();  // Note: automatic execution
+
     return {
         parse: function(callback) {
-            var attributeIds=null, d=null, csvFile=null, settings=null;
-            // To be able to submit a file (sanely) using AJAX we have to
-            // use a FormData object and a File object. Because of this the
-            // page requires HTML5: Chrome 13, Firefox 7, IE 10, Opera 16, and
-            // Safari 6
-            // <https://developer.mozilla.org/en-US/docs/Web/API/FormData>
-            // <https://developer.mozilla.org/en-US/docs/Web/API/File>
-            d = new FormData();
-            csvFile = document.getElementById('form.file').files[0];
-            d.append('csv', csvFile);
-
-            attributeIds = attributes.get_properties();
-            jQuery.each(attributeIds, function(i, attr) {
-                // 'columns' is appended multiple times because it is a list.
-                d.append('columns', attr);
-            });
-
-            // The ID of the button that was clicked, for zope.formlib
-            d.append('submit', '');
-
-            // The following is *mostly* a jQuery.post call:
-            // jQuery.post(URL, d, success, 'application/json');
-            settings = {
-                accepts: 'application/json',
-                async: true,
-                cache: false,
-                contentType: false,
-                crossDomain: false,
-                data: d,
-                dataType: 'json',
-                error: error,
-                headers: {},
-                processData: false,  // No jQuery, put the data down.
-                success: success,
-                traditional: true,
-                // timeout: TODO, What is the sane timeout?
-                type: 'POST',
-                url: URL,
-            }
-            jQuery.ajax(settings)
-        }
+            show_feedback();
+            send_request();
+        },
+        'SUCCESS_EVENT': PARSE_SUCCESS
     }
 }
 
@@ -266,6 +301,12 @@ jQuery(window).load(function () {
     jQuery('#gs-group-member-invite-csv-columns-template .btn')
         .click(templateGenerator.generate);
 
-    parser = ParserAJAX(attributes);
+    parser = ParserAJAX(attributes, '#gs-group-member-invite-csv-form',
+                        '#gs-group-member-invite-csv-feedback',
+                        '#gs-group-member-invite-csv-feedback-checking');
     jQuery('#form\\.actions\\.invite').click(parser.parse);
+
+
+    jQuery('#gs-group-member-invite-csv-feedback-checking')
+        .on(parser.SUCCESS_EVENT, function(e){console.log('Here');});
 });

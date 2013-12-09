@@ -40,7 +40,8 @@
          aria-labelledby="gs-group-member-invite-csv-h"
          metal:fill-slot="body">
       <h1>Invite by CSV</h1>
-      <div id="gs-group-member-invite-csv-form">
+      <div id="gs-group-member-invite-csv-form"
+           class="slide">
         <section id="gs-group-member-invite-csv-columns">
           <h2>Columns</h2>
           <p class="muted">
@@ -155,23 +156,31 @@
         </div><!--buttons-->
       </div><!--gs-group-member-invite-csv-form-->
       <div id="gs-group-member-invite-csv-feedback"
+           class="hide fade;"
            aria-labelledby="gs-group-member-invite-csv-feedback-h">
         <h2 id="gs-group-member-invite-csv-feedback-h">
-          Processing <code>csv.file</code>
+          Processing <code class="filename">csv.file</code>
         </h2>
-        <section id="gs-group-member-invite-csv-feedback--checking">
-          <h3>&#x2714; Checking</h3>
+        <section id="gs-group-member-invite-csv-feedback-checking"
+                 class="hide slide">
+          <h3 id="gs-group-member-invite-csv-feedback-checking-h">
+            <span data-icon="&#xe619;" aria-hidden="true"
+                  class="loading"> </span>
+            Checking
+          </h3>
           <p class="muted">
             The
             <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
-            file is being checked &#8213; to ensure that there are the
+            file is being checked &#8213; to ensure that each row has the
             right number of columns, for example.
             (Technically, this step is called <q>parsing</q>.)
             Once the file has been checked then the people specified in the
+            <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
             file will be invited.
           </p>
         </section><!--gs-group-member-invite-csv-feedback-checking-->
-        <section id="gs-group-member-invite-csv-feedback-inviting">
+        <section id="gs-group-member-invite-csv-feedback-inviting"
+                 class="hide slide">
           <h3>
             <span data-icon="&#xe619;" aria-hidden="true"
                   class="loading"> </span>
