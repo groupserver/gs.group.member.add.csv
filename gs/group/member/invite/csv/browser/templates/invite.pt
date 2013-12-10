@@ -186,40 +186,29 @@
                   class="loading"> </span>
             Inviting
           </h3>
-          <p class="small">
-            Inviting <code>foo@example.com</code> (18/90)
+          <p class="small current-operation">
+            Inviting <code class="email curr-email">foo@example.com</code>
+            (<span class="curr-n">18</span>/<span class="total">90</span>)
           </p>
           <div class="progress">
             <div class="bar bar-progress" style="width: 20%;"></div>
           </div><!--progress-->
-          <section id="gs-group-member-invite-csv-feedback-inviting-success">
+          <section id="gs-group-member-invite-csv-feedback-inviting-success"
+                   class="success">
             <h4>Invited</h4>
-            <ul>
-              <li>Bar <code>bar@example.com</code>: created profile and
-                invited.</li>
-              <li>Wibble <code>wibble@example.com</code>: invited person with
-                an existing profile.</li>
+            <ul >
             </ul>
           </section><!--gs-group-member-invite-csv-feedback-inviting-success-->
-          <section id="gs-group-member-invite-csv-feedback-inviting-ignored">
+          <section id="gs-group-member-invite-csv-feedback-inviting-ignored"
+                   class="ignored">
             <h4>Ignored</h4>
             <ul>
-              <li>The first row was assumed to be a header.</li>
-              <li>Michael JasonSmith <code>mpj17@onlinegroups.net</code> is
-                already a member.</li>
             </ul>
           </section>
-          <section id="gs-group-member-invite-csv-feedback-inviting-problems">
+          <section id="gs-group-member-invite-csv-feedback-inviting-problems"
+                   class="problems">
             <h4>Problems</h4>
             <ul>
-              <li>
-                <strong>Row 4:</strong>
-                <code>blarg</code> is not a valid email address.
-              </li>
-              <li>
-                <strong>Row 12:</strong>
-                Missing Name for <code>qux@example.com</code>
-              </li>
             </ul>
           </section><!--gs-group-member-invite-csv-feedback-inviting-problems-->
         </section><!--gs-group-member-invite-csv-feedback-inviting-->

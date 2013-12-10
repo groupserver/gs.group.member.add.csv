@@ -203,14 +203,14 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
         URL='csv.json', PARSE_SUCCESS='parse_success';
 
     function success (data, textStatus, jqXHR) {
-        var successEvent=null;
+        var successEvent=null, json=null;
         console.log(textStatus); // TODO: Remove
         checking.find('.loading')
             .removeClass('loading')
             .attr('data-icon', '\u2714');
 
         successEvent = jQuery.Event(PARSE_SUCCESS);
-        checking.trigger(successEvent);
+        checking.trigger(successEvent, [data]);
     }
 
     function error(jqXHR, textStatus, errorThrown) {
@@ -248,7 +248,7 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
             d.append('columns', attr);
         });
 
-        // The ID of the button that was clicked, for zope.formlib
+        // The ID of the button that was "clicked", for zope.formlib
         d.append('submit', '');
 
         // The following is *mostly* a jQuery.post call:
@@ -289,9 +289,150 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
     }
 }
 
+
+function InviterAJAX (invitingBlockSelector) {
+    var invitingBlock=null, progressBar=null, currN=null, total=null,
+        success=null, ignored=null, problems=null, email=null,
+        json=null, membersToInvite=null, totalRows=0, currRow=0,
+        URL='gs-group-member-invite-json.html'
+
+    function show_inviting() {
+        invitingBlock.removeClass('hide');
+        email.text('');
+        total.text(totalRows.toString());
+        currN.text('0');
+        progressBar.css('width', '0%');
+
+        success.addClass('hide');
+        ignored.addClass('hide');
+        problems.addClass('hide');
+    }
+
+    function error (jqXHR, textStatus, errorThrown) {
+        console.log('Issues');
+        console.log(textStatus);
+        console.error(errorThrown);
+    }
+
+    function log_feedback(info, area) {
+        area.find('ul').append(info);
+        if (area.hasClass('hide')) {
+            area.removeClass('hide');
+        }
+    }
+
+    function invite_success (data, textStatus, jqXHR) {
+        var info='';
+        // "Success" is broadly defined as "not an AJAX error".
+        info = '<li>' + data.message[0] + '</li>';
+        if (data.status == 3) { // Existing member
+            log_feedback(info, ignored);
+        } else if ((data.status == 2) || (data.status == 1)) {
+            log_feedback(info, success);
+        } else { // Assume it is a problem
+            log_feedback(info, problems);
+        }
+
+        if (membersToInvite.length == 0) {
+            done();
+        } else {
+            invite_member();
+        }
+    }
+    function invite_member() {
+        // SIDE EFFECT: Reduces the length of membersToInvite by one
+        var pc=0, memberToInvite=null, settings=null, d=null, attr=null;
+
+        currRow++;
+        currN.text(currRow.toString());
+        // The "+ 1" is so the progress bar is incomplete when processing the
+        // final row.
+        pc = (currRow / (totalRows + 1.0)) * 100;
+        progressBar.css('width', pc.toString()+'%')
+        
+        memberToInvite = membersToInvite.pop();
+        email.text(memberToInvite.email);  // Email must exist
+        // The invite code is actually expecting a toAddr field, rather than
+        // email, so rename the property.
+        memberToInvite['toAddr'] = memberToInvite.email;
+        delete memberToInvite.email ;
+
+        d = new FormData();
+        for (attr in memberToInvite) {
+            d.append(attr, memberToInvite[attr])
+        }
+        d.append('subject', 'Invite');  // TODO: sort out the message
+        d.append('message', 'Stuff');  // TODO: sort out the message
+        d.append('fromAddr', 'mpj17@onlinegroups.net');  // TODO from address
+        d.append('delivery', 'email');  // TODO: delivery
+        // The ID of the button that was "clicked", for zope.formlib
+        d.append('submit', 'submit');
+
+        settings = {
+            accepts: 'application/json',
+            async: true,
+            cache: false,
+            contentType: false,
+            crossDomain: false,
+            data: d,
+            dataType: 'json',
+            error: error,
+            headers: {},
+            processData: false,
+            success: invite_success,
+            traditional: true,
+            // timeout: TODO, What is the sane timeout?
+            type: 'POST',
+            url: URL,
+        };
+        jQuery.ajax(settings);
+    }
+
+    function done () {
+        var m=null;
+        progressBar.css('width', '100%');
+        invitingBlock.find('.loading')
+            .removeClass('loading')
+            .attr('data-icon', '\u2714');
+        m = 'Processed ' + totalRows.toString() + ' people in '+
+            (totalRows + 1).toString() + ' rows. ' +
+            '(The first row was presumed to be a header and ignored.)'
+        invitingBlock.find('.current-operation').text(m);
+    }
+
+    function init () {
+        invitingBlock = jQuery(invitingBlockSelector);
+        progressBar = invitingBlock.find('.bar');
+        total = invitingBlock.find('.total');
+        email = invitingBlock.find('.curr-email');
+        currN = invitingBlock.find('.curr-n');
+        success = invitingBlock.find('.success');
+        ignored = invitingBlock.find('.ignored');
+        problems = invitingBlock.find('.problems');
+    }
+    init();  // Note: automatic execution.
+
+    function set_member_data(jsonData) {
+        json = jsonData;
+        // Because pop() pops from the end we reverse the list so
+        // people are processed in the same order as the CSV.
+        json.reverse();
+        membersToInvite = json.slice(0);  // Copy the list
+        totalRows = json.length;
+    }
+
+    return {
+        invite: function (e, jsonData) {
+            set_member_data(jsonData)
+            show_inviting();
+            invite_member();
+        }
+    }
+}
+
 jQuery(window).load(function () {
     var ms=null, ts=null, attributes=null, templateGenerator=null,
-    parser=null;
+        parser=null, inviter=null;
 
     ms = '.dropdown-menu';
     ts = '#gs-group-member-invite-csv-columns-table';
@@ -306,7 +447,8 @@ jQuery(window).load(function () {
                         '#gs-group-member-invite-csv-feedback-checking');
     jQuery('#form\\.actions\\.invite').click(parser.parse);
 
-
+    inviter = InviterAJAX('#gs-group-member-invite-csv-feedback-inviting',
+                          '#gs-group-member-invite-csv-feedback-inviting .bar')
     jQuery('#gs-group-member-invite-csv-feedback-checking')
-        .on(parser.SUCCESS_EVENT, function(e){console.log('Here');});
+        .on(parser.SUCCESS_EVENT, inviter.invite);
 });
