@@ -343,6 +343,8 @@ function InviterAJAX (invitingBlockSelector) {
         } else if ((data.status == 2) || (data.status == 1)) {
             log_feedback(info, success);
         } else { // Assume it is a problem
+            info = jQuery(info);
+            info.prepend('<strong>Row ' + currRow.toString() + ': </strong>');
             log_feedback(info, problems);
         }
         next();
