@@ -40,7 +40,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
         title = jQuery('<td class="slide '+id+'">'+name+'</td>');
         titles.find(':last').after(title);
 
-       example = jQuery('<td class="muted slide '+id+'">Example '
+        example = jQuery('<td class="muted slide '+id+'">Example '
                          +name+'</td>');
         examples.find(':last').after(example);
 
@@ -51,11 +51,12 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     function menu_option_clicked(event) {
         var t=null, id=null, name=null;
         t = jQuery(event.target);
-        id = t.attr('id');
-        name = t.text()
-        add_column(id, name);
-
-        t.parent().addClass('disabled');
+        if (!t.parent().hasClass('disabled')) {
+            id = t.attr('id');
+            name = t.text()
+            add_column(id, name);
+            t.parent().addClass('disabled');
+        }
     }
 
     function del_col(index) {
@@ -204,7 +205,6 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
 
     function success (data, textStatus, jqXHR) {
         var successEvent=null, json=null;
-        console.log(textStatus); // TODO: Remove
         checking.find('.loading')
             .removeClass('loading')
             .attr('data-icon', '\u2714');
