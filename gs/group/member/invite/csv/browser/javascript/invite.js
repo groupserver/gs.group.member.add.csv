@@ -201,33 +201,37 @@ function TemplateGenerator(attributes) {
 function ParserAJAX (attributes, formSelector, feedbackSelector, 
                      checkingSelector) {
     var form=null, feedback=null, checking=null,
-        URL='csv.json', PARSE_SUCCESS='parse_success';
+        URL='csv.json', PARSE_SUCCESS='parse_success', PARSE_FAIL='parse_fail';
 
     function success (data, textStatus, jqXHR) {
-        var successEvent=null, json=null;
+        var e=null, json=null;
         checking.find('.loading')
             .removeClass('loading')
             .attr('data-icon', '\u2714');
-
-        successEvent = jQuery.Event(PARSE_SUCCESS);
-        checking.trigger(successEvent, [data]);
+        if (data.status == -3) {
+            e = jQuery.Event(PARSE_FAIL);
+            checking.trigger(e);
+        } else {
+            e = jQuery.Event(PARSE_SUCCESS);
+            checking.trigger(e, [data]);
+        }
     }
 
     function error(jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
+        
     }
 
     function show_feedback() {
         var csvFile=null, name=null;
 
-        form.addClass('hide');
-        feedback.removeClass('hide');
+        form.removeClass('in');
+        feedback.addClass('in');
 
         csvFile = document.getElementById('form.file').files[0];
         name = csvFile.name;
         feedback.find('.filename').text(name);
 
-        checking.removeClass('hide');
+        checking.addClass('in');
     }
 
     function send_request() {
@@ -285,7 +289,8 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
             show_feedback();
             send_request();
         },
-        'SUCCESS_EVENT': PARSE_SUCCESS
+        'SUCCESS_EVENT': PARSE_SUCCESS,
+        'FAIL_EVENT': PARSE_FAIL
     }
 }
 
@@ -297,15 +302,15 @@ function InviterAJAX (invitingBlockSelector) {
         URL='gs-group-member-invite-json.html'
 
     function show_inviting() {
-        invitingBlock.removeClass('hide');
+        invitingBlock.addClass('in');
         email.text('');
         total.text(totalRows.toString());
         currN.text('0');
         progressBar.css('width', '0%');
 
-        success.addClass('hide');
-        ignored.addClass('hide');
-        problems.addClass('hide');
+        success.removeClass('in');
+        ignored.removeClass('in');
+        problems.removeClass('in');
     }
 
     function error (jqXHR, textStatus, errorThrown) {
@@ -321,8 +326,8 @@ function InviterAJAX (invitingBlockSelector) {
 
     function log_feedback(info, area) {
         area.find('ul').append(info);
-        if (area.hasClass('hide')) {
-            area.removeClass('hide');
+        if (!area.hasClass('in')) {
+            area.addClass('in');
         }
     }
 
@@ -459,6 +464,6 @@ jQuery(window).load(function () {
 
     inviter = InviterAJAX('#gs-group-member-invite-csv-feedback-inviting',
                           '#gs-group-member-invite-csv-feedback-inviting .bar')
-    jQuery('#gs-group-member-invite-csv-feedback-checking')
+   jQuery('#gs-group-member-invite-csv-feedback-checking')
         .on(parser.SUCCESS_EVENT, inviter.invite);
 });

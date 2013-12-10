@@ -41,7 +41,7 @@
          metal:fill-slot="body">
       <h1>Invite by CSV</h1>
       <div id="gs-group-member-invite-csv-form"
-           class="slide">
+           class="collapse in">
         <section id="gs-group-member-invite-csv-columns">
           <h2>Columns</h2>
           <p class="muted">
@@ -145,7 +145,7 @@
         <section id="gs-group-member-invite-csv-file"
              class="form-widget required">
           <label>File</label>
-          <input type="file" accept=".csv"
+          <input type="file" accept="text/csv,text/plain,.csv" multiple="false"
                  name="form.file" id="form.file"/>
         </section><!--gs-group-member-invite-csv-file-->
         <div class="buttons">
@@ -156,13 +156,14 @@
         </div><!--buttons-->
       </div><!--gs-group-member-invite-csv-form-->
       <div id="gs-group-member-invite-csv-feedback"
-           class="hide fade;"
+           class="collapse;"
            aria-labelledby="gs-group-member-invite-csv-feedback-h">
-        <h2 id="gs-group-member-invite-csv-feedback-h">
+        <h2 id="gs-group-member-invite-csv-feedback-h"
+            class="collapse">
           Processing <code class="filename">csv.file</code>
         </h2>
         <section id="gs-group-member-invite-csv-feedback-checking"
-                 class="hide slide">
+                 class="collapse">
           <h3 id="gs-group-member-invite-csv-feedback-checking-h">
             <span data-icon="&#xe619;" aria-hidden="true"
                   class="loading"> </span>
@@ -180,7 +181,7 @@
           </p>
         </section><!--gs-group-member-invite-csv-feedback-checking-->
         <section id="gs-group-member-invite-csv-feedback-inviting"
-                 class="hide slide">
+                 class="collapse">
           <h3>
             <span data-icon="&#xe619;" aria-hidden="true"
                   class="loading"> </span>
@@ -194,19 +195,19 @@
             <div class="bar bar-progress" style="width: 20%;"></div>
           </div><!--progress-->
           <section id="gs-group-member-invite-csv-feedback-inviting-success"
-                   class="success">
+                   class="success collapse">
             <h4>Invited</h4>
             <ul >
             </ul>
           </section><!--gs-group-member-invite-csv-feedback-inviting-success-->
           <section id="gs-group-member-invite-csv-feedback-inviting-ignored"
-                   class="ignored">
+                   class="ignored collapse">
             <h4>Ignored</h4>
             <ul>
             </ul>
           </section>
           <section id="gs-group-member-invite-csv-feedback-inviting-problems"
-                   class="problems">
+                   class="problems collapse">
             <h4>Problems</h4>
             <ul>
             </ul>
