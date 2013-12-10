@@ -44,11 +44,31 @@ class CSV2JSON(GroupEndpoint):
         # TODO: Delivery?
 
         reader = UnicodeDictReader(csv, cols)
-        next(reader)  # Skip the first row (the header)
-        profiles = []
-        for row in reader:
-            profiles.append(row)
-        retval = to_json(profiles)
+        try:
+            next(reader)  # Skip the first row (the header)
+        except UnicodeDecodeError as e:
+            m = {'status': -2,
+                'message': ['Could not read the file. Please check that you '
+                            'selected the correct CSV file.',
+                            str(e)]}
+            retval = to_json(m)
+        else:
+            profiles = []
+            rowCount = 0
+            for row in reader:
+                rowCount += 1
+                if len(row) > len(cols):
+                    msg = 'Row {0} had {1} columns, rather than {2}. Please ' \
+                            'check the file and the columns.'
+                    # Name hack.
+                    profiles = {'status': -3,
+                                'message': [msg.format(rowCount, len(row),
+                                                        len(cols))]}
+                    # --=mpj17=-- I think this is the first time I have used
+                    # break in actual code. Wow.
+                    break
+                profiles.append(row)
+            retval = to_json(profiles)
         return retval
 
     def process_failure(self, action, data, errors):
