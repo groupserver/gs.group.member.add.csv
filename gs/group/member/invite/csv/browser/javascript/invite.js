@@ -309,15 +309,28 @@ function InviterAJAX (invitingBlockSelector) {
     }
 
     function error (jqXHR, textStatus, errorThrown) {
+        var info=null;
         console.log('Issues');
         console.log(textStatus);
         console.error(errorThrown);
+        info = '<li>Problem with row ' + currRow.toString() + ': ' 
+            + textStatus + '</li>';
+        log_feedback(info, problems);
+        next();
     }
 
     function log_feedback(info, area) {
         area.find('ul').append(info);
         if (area.hasClass('hide')) {
             area.removeClass('hide');
+        }
+    }
+
+    function next() {
+        if (membersToInvite.length == 0) {
+            done();
+        } else {
+            invite_member();
         }
     }
 
@@ -332,12 +345,7 @@ function InviterAJAX (invitingBlockSelector) {
         } else { // Assume it is a problem
             log_feedback(info, problems);
         }
-
-        if (membersToInvite.length == 0) {
-            done();
-        } else {
-            invite_member();
-        }
+        next();
     }
     function invite_member() {
         // SIDE EFFECT: Reduces the length of membersToInvite by one
