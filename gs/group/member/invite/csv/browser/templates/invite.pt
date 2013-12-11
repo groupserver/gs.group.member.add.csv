@@ -156,10 +156,9 @@
         </div><!--buttons-->
       </div><!--gs-group-member-invite-csv-form-->
       <div id="gs-group-member-invite-csv-feedback"
-           class="collapse;"
+           class="collapse"
            aria-labelledby="gs-group-member-invite-csv-feedback-h">
-        <h2 id="gs-group-member-invite-csv-feedback-h"
-            class="collapse">
+        <h2 id="gs-group-member-invite-csv-feedback-h">
           Processing <code class="filename">csv.file</code>
         </h2>
         <section id="gs-group-member-invite-csv-feedback-checking"
