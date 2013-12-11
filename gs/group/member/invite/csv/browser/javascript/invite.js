@@ -463,34 +463,45 @@ function InviterAJAX (invitingBlockSelector, deliverySelector,
 
 jQuery(window).load(function () {
     var ms=null, ts=null, attributes=null, templateGenerator=null,
-        parser=null, inviter=null;
+        parser=null, inviter=null, scriptElement=null;
 
+    scriptElement = jQuery('#gs-group-member-invite-csv-js');
+    
+    // The columns code
     ms = '.dropdown-menu';
     ts = '#gs-group-member-invite-csv-columns-table';
     attributes = GSInviteByCSVOptionalAttributes(ts, ms);
 
+    // The template generator
     templateGenerator = TemplateGenerator(attributes);
     jQuery('#gs-group-member-invite-csv-columns-template .btn')
         .click(templateGenerator.generate);
 
-    parser = ParserAJAX(attributes, '#gs-group-member-invite-csv-form',
-                        '#gs-group-member-invite-csv-feedback',
-                        '#gs-group-member-invite-csv-feedback-checking');
-    jQuery('#form\\.actions\\.invite').click(parser.parse);
+    // The actual inviting: Parser
+    parser = ParserAJAX(attributes, scriptElement.data('form'),
+                        scriptElement.data('feedback'), 
+                        scriptElement.data('checking'));
+    // The actual inviting: Inviter
+    inviter = InviterAJAX(scriptElement.data('inviting'),
+                          scriptElement.data('delivery'),
+                          scriptElement.data('invitation'))
 
-    inviter = InviterAJAX('#gs-group-member-invite-csv-feedback-inviting',
-                          '[name=form\\.delivery]',
-                          '#gs-group-member-invite-csv-invitation')
-   jQuery('#gs-group-member-invite-csv-feedback-checking')
+    // Connect the Invite button up to the parser
+    jQuery(scriptElement.data('invite-button')).click(parser.parse);
+    // Connet the inviter up to the parser, inviting everyone if the 
+    // parsing ws successful
+    jQuery(scriptElement.data('checking'))
         .on(parser.SUCCESS_EVENT, inviter.invite);
-    jQuery('.reset')
+
+    // The reset buttons
+    jQuery(scriptElement.data('reset'))
         .click(function (e) {
             var p=null;
             jQuery('.in').removeClass('in');  // Hide everything
-            p = jQuery('#gs-group-member-invite-csv-feedback-inviting');
+            p = jQuery(scriptElement.data('inviting'));
             p.find('ul').empty();  // Clear out the feedback
             p.find('.bar').css('width', '0');  // Rest the progress bar
-            jQuery('#gs-group-member-invite-csv-form')  // Show the form
+            jQuery(scriptElement.data('form'))  // Show the form
                 .removeClass('hide')
                 .addClass('in');
         });
