@@ -441,6 +441,7 @@ function InviterAJAX (invitingBlockSelector) {
         json.reverse();
         membersToInvite = json.slice(0);  // Copy the list
         totalRows = json.length;
+        currRow = 1;  // Due to skipping the header.
     }
 
     return {
