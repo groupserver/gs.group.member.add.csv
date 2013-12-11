@@ -1,6 +1,6 @@
 jQuery.noConflict();
 
-function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
+function GSInviteByCSVOptionalAttributes(tableSelector) {
     var table=null, labels=null, titles=null, examples=null, optionalMenu=null;
 
     function get_most_recent_optional_column_label() {
@@ -23,7 +23,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
 
     function colgroup_span_incr(val) {
         var cg=null;
-        cg = jQuery('#gs-group-member-invite-csv-columns-optional');
+        cg = jQuery('colgroup.optional');
         cg.attr('span', (parseInt(cg.attr('span'))+val).toString());
     }
 
@@ -131,12 +131,13 @@ function GSInviteByCSVOptionalAttributes(tableSelector, optionalMenuSelector) {
     }
 
     function init() {
-        optionalMenu = jQuery(optionalMenuSelector);
+        table = jQuery(tableSelector);
+
+        optionalMenu = table.find('.dropdown-menu');
         optionalMenu.find('a')
             .removeAttr('href')
             .click(menu_option_clicked);
 
-        table = jQuery(tableSelector);
         labels = table.find('.labels');
         titles = table.find('.titles');
         examples = table.find('.examples');
@@ -468,13 +469,12 @@ jQuery(window).load(function () {
     scriptElement = jQuery('#gs-group-member-invite-csv-js');
     
     // The columns code
-    ms = '.dropdown-menu';
-    ts = '#gs-group-member-invite-csv-columns-table';
-    attributes = GSInviteByCSVOptionalAttributes(ts, ms);
+    ts = scriptElement.data('columns');
+    attributes = GSInviteByCSVOptionalAttributes(ts);
 
     // The template generator
     templateGenerator = TemplateGenerator(attributes);
-    jQuery('#gs-group-member-invite-csv-columns-template .btn')
+    jQuery(scriptElement.data('template'))
         .click(templateGenerator.generate);
 
     // The actual inviting: Parser
