@@ -40,6 +40,15 @@
          aria-labelledby="gs-group-member-invite-csv-h"
          metal:fill-slot="body">
       <h1>Invite by CSV</h1>
+      <p class="intro muted">
+        If you need to invite many people to join
+        <span class="group" tal:content="view/groupInfo/name">this group</span>
+        then it <em>can</em> be easier to create a spreadsheet with all the
+        information about the new members, and upload that to this page.
+        It may also be a pain to get the data in the right format
+        (<abbr class="initialism" title="Comma Separated Value">CSV</abbr>, or
+        comma separated value).
+      </p>
       <div id="gs-group-member-invite-csv-form"
            class="fade in">
         <section id="gs-group-member-invite-csv-columns">
@@ -51,7 +60,6 @@
             file  <strong>must</strong> have the <em>Email address</em>
             as the first column, and <em>Name</em> as the second column;
             you may add other columns.
-            The template, below, provides an example.
           </p>
           <table id="gs-group-member-invite-csv-columns-table">
             <colgroup class="required"
@@ -137,6 +145,14 @@
               </tr>
             </tbody>
           </table>
+          <p class="muted">
+            Once you have the columns determined you can fill out the
+            spreadsheet with information about the new group members.
+            The <em>template,</em> below, provides an example of what the
+            <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
+            should look like, and it can be used as the basis of your own
+            spreadsheet.
+          </p>
           <p id="gs-group-member-invite-csv-columns-template">
             <a data-icon="&#xe002;" type="text/csv" download="template.csv"
                class="btn btn-mini"><code>template.csv</code></a>
@@ -144,9 +160,48 @@
         </section><!--gs-group-member-invite-csv-columns-->
         <section id="gs-group-member-invite-csv-file"
              class="form-widget required">
-          <label>File</label>
-          <input type="file" accept="text/csv,text/plain,.csv" multiple="false"
+          <label for="form.file">File</label>
+          <p class="muted">
+            Next, select the
+            <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
+            file that contains the data.
+            <em>Note:</em> the first row will be considered
+            the header and ignored.
+          </p>
+          <input type="file" accept="text/csv,text/plain,.csv"
+                 multiple="false"
                  name="form.file" id="form.file"/>
+        </section><!--gs-group-member-invite-csv-file-->
+        <section id="gs-group-member-invite-csv-delivery"
+                 class="form-widget disclosureWidget">
+          <label class="disclosureButton">Message delivery</label>
+          <div class="val disclosureShowHide" style="display:none;">
+            <p class="muted">
+              You may change the default delivery settings for the new
+              members.
+              Normally group members receive an email per post, but you
+              can change it to either a daily-digest, or web-only (when
+              no email is delivered).
+            </p>
+            <div class="radioItem">
+              <input type="radio" name="form.delivery" class="radioType"
+                     checked="checked" id="form.delivery.email" value="email"/>
+              <label for="form.delivery.email"
+                     class="radioLabel">One email per post</label>
+            </div>
+            <div class="radioItem">
+              <input type="radio" name="form.delivery" class="radioType"
+                     id="form.delivery.digest" value="digest" />
+              <label for="form.delivery.digest"
+                     class="radioLabel">Daily digest of topics</label>
+            </div>
+            <div class="radioItem">
+            <input type="radio" name="form.delivery" class="radioType"
+                     id="form.delivery.web" value="web" />
+              <label for="form.delivery.web"
+                     class="radioLabel">Web only</label>
+            </div>
+          </div>
         </section><!--gs-group-member-invite-csv-file-->
         <div class="buttons">
           <div class="formelementbutton">
@@ -183,7 +238,7 @@
             <h4>
               Check failed
               <button aria-hidden="true" type="button" class="close reset"
-                      data-dismiss="alert">&times;</button>
+                      data-dismiss="alert">&#215;</button>
             </h4>
             <p id="gs-group-member-invite-csv-feedback-checking-alert-issue"
                class="issue">

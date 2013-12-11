@@ -300,10 +300,10 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
 }
 
 
-function InviterAJAX (invitingBlockSelector) {
+function InviterAJAX (invitingBlockSelector, deliverySelector) {
     var invitingBlock=null, progressBar=null, currN=null, total=null,
         success=null, ignored=null, problems=null, email=null,
-        json=null, membersToInvite=null, totalRows=0, currRow=0,
+        delivery=null, json=null, membersToInvite=null, totalRows=0, currRow=0,
         URL='gs-group-member-invite-json.html';
 
     function show_inviting() {
@@ -361,7 +361,8 @@ function InviterAJAX (invitingBlockSelector) {
     }
     function invite_member() {
         // SIDE EFFECT: Reduces the length of membersToInvite by one
-        var pc=0, memberToInvite=null, settings=null, d=null, attr=null;
+        var pc=0, memberToInvite=null, settings=null, selectedDelivery=null,
+            d=null, attr=null;
 
         currRow++;
         currN.text(currRow.toString());
@@ -384,7 +385,8 @@ function InviterAJAX (invitingBlockSelector) {
         d.append('subject', 'Invite');  // TODO: sort out the message
         d.append('message', 'Stuff');  // TODO: sort out the message
         d.append('fromAddr', 'mpj17@onlinegroups.net');  // TODO from address
-        d.append('delivery', 'email');  // TODO: delivery
+        selectedDelivery = delivery.val();
+        d.append('delivery', selectedDelivery);
         // The ID of the button that was "clicked", for zope.formlib
         d.append('submit', 'submit');
 
@@ -424,6 +426,7 @@ function InviterAJAX (invitingBlockSelector) {
 
     function init () {
         invitingBlock = jQuery(invitingBlockSelector);
+        delivery = jQuery(deliverySelector);
         progressBar = invitingBlock.find('.bar');
         total = invitingBlock.find('.total');
         email = invitingBlock.find('.curr-email');
@@ -471,7 +474,7 @@ jQuery(window).load(function () {
     jQuery('#form\\.actions\\.invite').click(parser.parse);
 
     inviter = InviterAJAX('#gs-group-member-invite-csv-feedback-inviting',
-                          '#gs-group-member-invite-csv-feedback-inviting .bar')
+                          '[name=form\\.delivery]')
    jQuery('#gs-group-member-invite-csv-feedback-checking')
         .on(parser.SUCCESS_EVENT, inviter.invite);
     jQuery('.reset')
