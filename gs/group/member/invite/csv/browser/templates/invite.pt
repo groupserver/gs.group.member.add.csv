@@ -41,7 +41,7 @@
          metal:fill-slot="body">
       <h1>Invite by CSV</h1>
       <div id="gs-group-member-invite-csv-form"
-           class="collapse in">
+           class="fade in">
         <section id="gs-group-member-invite-csv-columns">
           <h2>Columns</h2>
           <p class="muted">
@@ -163,7 +163,7 @@
           Processing <code class="filename">csv.file</code>
         </h2>
         <section id="gs-group-member-invite-csv-feedback-checking"
-                 class="collapse">
+                 class="fade">
           <h3 id="gs-group-member-invite-csv-feedback-checking-h">
             <span data-icon="&#xe619;" aria-hidden="true"
                   class="loading"> </span>
@@ -212,6 +212,13 @@
             <ul>
             </ul>
           </section><!--gs-group-member-invite-csv-feedback-inviting-problems-->
+          <div class="buttons fade">
+            <div class="formelementbutton">
+              <a id="gs-group-member-invite-csv-feedback-inviting-reset"
+                 class="btn"><span
+                               class="muted">✚</span> Invite more&#8230;</a>
+            </div>
+          </div><!--buttons-->
         </section><!--gs-group-member-invite-csv-feedback-inviting-->
       </div><!--gs-group-member-invite-csv-feedback-->
     </div><!--gs-group-member-invite-csv-->

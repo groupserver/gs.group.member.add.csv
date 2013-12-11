@@ -225,6 +225,7 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
         var csvFile=null, name=null;
 
         form.removeClass('in');
+        form.addClass('hide');
         feedback.addClass('in');
 
         csvFile = document.getElementById('form.file').files[0];
@@ -299,7 +300,7 @@ function InviterAJAX (invitingBlockSelector) {
     var invitingBlock=null, progressBar=null, currN=null, total=null,
         success=null, ignored=null, problems=null, email=null,
         json=null, membersToInvite=null, totalRows=0, currRow=0,
-        URL='gs-group-member-invite-json.html'
+        URL='gs-group-member-invite-json.html';
 
     function show_inviting() {
         invitingBlock.addClass('in');
@@ -413,6 +414,8 @@ function InviterAJAX (invitingBlockSelector) {
             (totalRows + 1).toString() + ' rows. ' +
             '(The first row was presumed to be a header and ignored.)'
         invitingBlock.find('.current-operation').text(m);
+
+        invitingBlock.find('.buttons').addClass('in');
     }
 
     function init () {
@@ -442,7 +445,7 @@ function InviterAJAX (invitingBlockSelector) {
             show_inviting();
             invite_member();
         }
-    }
+    } // return
 }
 
 jQuery(window).load(function () {
@@ -466,4 +469,15 @@ jQuery(window).load(function () {
                           '#gs-group-member-invite-csv-feedback-inviting .bar')
    jQuery('#gs-group-member-invite-csv-feedback-checking')
         .on(parser.SUCCESS_EVENT, inviter.invite);
+    jQuery('#gs-group-member-invite-csv-feedback-inviting-reset')
+        .click(function (e) {
+            var p=null;
+            jQuery('.in').removeClass('in');  // Hide everything
+            p = jQuery('#gs-group-member-invite-csv-feedback-inviting');
+            p.find('ul').empty();  // Clear out the feedback
+            p.find('.bar').css('width', '0');  // Rest the progress bar
+            jQuery('#gs-group-member-invite-csv-form')  // Show the form
+                .removeClass('hide')
+                .addClass('in');
+        });
 });
