@@ -205,7 +205,7 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
 
     function success (data, textStatus, jqXHR) {
         var e=null, json=null, icon=null;;
-        icon = checking.find('.loading')
+        icon = checking.find('[data-icon]')
         icon.removeClass('loading')
         if (data.status) {
             icon.attr('data-icon', '\u2717');
