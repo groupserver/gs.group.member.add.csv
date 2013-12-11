@@ -204,14 +204,18 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
         URL='csv.json', PARSE_SUCCESS='parse_success', PARSE_FAIL='parse_fail';
 
     function success (data, textStatus, jqXHR) {
-        var e=null, json=null;
-        checking.find('.loading')
-            .removeClass('loading')
-            .attr('data-icon', '\u2714');
-        if (data.status == -3) {
+        var e=null, json=null, icon=null;;
+        icon = checking.find('.loading')
+        icon.removeClass('loading')
+        if (data.status) {
+            icon.attr('data-icon', '\u2717');
+            checking.find('.alert-error').addClass('in');
+            checking.find('.alert-error .issue').text(data.message[0]);
             e = jQuery.Event(PARSE_FAIL);
             checking.trigger(e);
         } else {
+            checking.find('.alert-error').hide();
+            icon.attr('data-icon', '\u2713');
             e = jQuery.Event(PARSE_SUCCESS);
             checking.trigger(e, [data]);
         }
@@ -409,7 +413,7 @@ function InviterAJAX (invitingBlockSelector) {
         progressBar.css('width', '100%');
         invitingBlock.find('.loading')
             .removeClass('loading')
-            .attr('data-icon', '\u2714');
+            .attr('data-icon', '\u2713');
         m = 'Processed ' + totalRows.toString() + ' people in '+
             (totalRows + 1).toString() + ' rows. ' +
             '(The first row was presumed to be a header and ignored.)'
@@ -469,7 +473,7 @@ jQuery(window).load(function () {
                           '#gs-group-member-invite-csv-feedback-inviting .bar')
    jQuery('#gs-group-member-invite-csv-feedback-checking')
         .on(parser.SUCCESS_EVENT, inviter.invite);
-    jQuery('#gs-group-member-invite-csv-feedback-inviting-reset')
+    jQuery('.reset')
         .click(function (e) {
             var p=null;
             jQuery('.in').removeClass('in');  // Hide everything

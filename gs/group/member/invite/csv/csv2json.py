@@ -16,6 +16,7 @@ from __future__ import absolute_import, unicode_literals
 from json import dumps as to_json
 from StringIO import StringIO
 from zope.cachedescriptors.property import Lazy
+from zope.contenttype import guess_content_type
 from zope.formlib import form as formlib
 from gs.content.form.api.json import GroupEndpoint
 from gs.content.form import multi_check_box_widget
@@ -44,31 +45,45 @@ class CSV2JSON(GroupEndpoint):
         # TODO: Delivery?
 
         reader = UnicodeDictReader(csv, cols)
+        profiles = []
+        retval = None
         try:
             next(reader)  # Skip the first row (the header)
         except UnicodeDecodeError as e:
+            t = guess_content_type(body=data['csv'])[0]
+            msg = 'The file is different from what is required. (It appears '\
+                'to be a {0} file.) Please check that  you selected the '\
+                'correct CSV file.'
             m = {'status': -2,
-                'message': ['Could not read the file. Please check that you '
-                            'selected the correct CSV file.',
-                            str(e)]}
+                'message': [msg.format(t.split('/')[0]),
+                            str(e), t]}
             retval = to_json(m)
         else:
-            profiles = []
             rowCount = 0
             for row in reader:
                 rowCount += 1
                 if len(row) > len(cols):
                     msg = 'Row {0} had {1} columns, rather than {2}. Please ' \
-                            'check the file and the columns.'
+                            'check the file.'
                     # Name hack.
-                    profiles = {'status': -3,
+                    m = {'status': -3,
                                 'message': [msg.format(rowCount, len(row),
                                                         len(cols))]}
+                    retval = to_json(m)
+                    profiles = []
                     # --=mpj17=-- I think this is the first time I have used
                     # break in actual code. Wow.
                     break
                 profiles.append(row)
+        if profiles and (not retval):
             retval = to_json(profiles)
+        elif (not profiles) and not(retval):
+            msg = 'No rows were found in the CSV file. '\
+                'Please check that  you selected the correct CSV file.'
+            m = {'status': -4,
+                'message': [msg, 'no-rows']}
+            retval = to_json(m)
+        assert retval, 'No retval'
         return retval
 
     def process_failure(self, action, data, errors):

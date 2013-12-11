@@ -179,6 +179,23 @@
             <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
             file will be invited.
           </p>
+          <div id="gs-group-member-invite-csv-feedback-checking-alert"
+               class="alert alert-block alert-error fade">
+            <h4>
+              Check failed
+              <button aria-hidden="true" type="button" class="close reset"
+                      data-dismiss="alert">&times;</button>
+            </h4>
+            <p id="gs-group-member-invite-csv-feedback-checking-alert-issue"
+               class="issue">
+            </p>
+            <div class="buttons">
+              <div class="formelementbutton">
+                <a id="gs-group-member-invite-csv-feedback-inviting-reset"
+                   class="btn reset" data-icon="&#x25c3;">Back</a>
+              </div>
+            </div><!--buttons-->
+          </div><!--gs-group-member-invite-csv-feedback-checking-alert-->
         </section><!--gs-group-member-invite-csv-feedback-checking-->
         <section id="gs-group-member-invite-csv-feedback-inviting"
                  class="collapse">
@@ -215,7 +232,7 @@
           <div class="buttons fade">
             <div class="formelementbutton">
               <a id="gs-group-member-invite-csv-feedback-inviting-reset"
-                 class="btn"><span
+                 class="btn reset"><span
                                class="muted">✚</span> Invite more&#8230;</a>
             </div>
           </div><!--buttons-->
