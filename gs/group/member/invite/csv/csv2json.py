@@ -62,7 +62,10 @@ class CSV2JSON(GroupEndpoint):
             rowCount = 0
             for row in reader:
                 rowCount += 1
-                if len(row) > len(cols):
+                if len(row) != len(cols):
+                    # *Technically* the number of columns in CSV rows can be
+                    # arbitary. However, I am enforcing a strict interpretation
+                    # for sanity's sake.
                     msg = 'Row {0} had {1} columns, rather than {2}. Please ' \
                             'check the file.'
                     # Name hack.
