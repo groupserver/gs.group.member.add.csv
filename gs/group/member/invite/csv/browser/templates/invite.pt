@@ -292,6 +292,19 @@
           </div><!--buttons-->
         </section><!--gs-group-member-invite-csv-feedback-inviting-->
       </div><!--gs-group-member-invite-csv-feedback-->
+      <section id="gs-group-member-invite-csv-invitation"
+               style="display:none;">
+        <dl>
+          <dt>From</dt>
+          <dd><code tal:content="view/defaultFromEmail"
+                    class="email">admin@example.com</code></dd>
+          <dt>Subject</dt>
+          <dd class="subject">Invitation to join <tal:block replace="view/groupInfo/name">this group</tal:block></dd>
+        </dl>
+        <pre class="message">
+Please accept this invitation to join <tal:block replace="view/groupInfo/name">this group</tal:block>.
+        </pre>
+      </section><!--gs-group-member-invite-csv-message-->
     </div><!--gs-group-member-invite-csv-->
     <script metal:fill-slot="javascript" type="text/javascript"
             src="/++resource++gs-group-member-invite-csv.js"

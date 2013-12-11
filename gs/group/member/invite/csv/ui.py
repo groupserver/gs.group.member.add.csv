@@ -15,6 +15,7 @@
 from __future__ import absolute_import, unicode_literals
 from zope.cachedescriptors.property import Lazy
 from gs.group.base import GroupPage
+from gs.profile.email.base.emailuser import EmailUser
 from .profilelist import ProfileList
 
 
@@ -37,4 +38,10 @@ class CSVUploadUI(GroupPage):
     def requiredProperties(self):
         retval = [p for p in self.profileList
                     if self.profileList.properties[p.token].required]
+        return retval
+
+    @Lazy
+    def defaultFromEmail(self):
+        emailUser = EmailUser(self.context, self.loggedInUserInfo)
+        retval = emailUser.get_delivery_addresses()[0]
         return retval
