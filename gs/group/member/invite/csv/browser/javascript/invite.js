@@ -157,7 +157,7 @@ function GSInviteByCSVOptionalAttributes(tableSelector) {
     }
 }
 
-function TemplateGenerator(attributes) {
+function GSInviteByCSVTemplateGenerator(attributes) {
     var URL='data:text/csv;charset=utf-8,';
 
     function array_to_row(arr) {
@@ -199,8 +199,8 @@ function TemplateGenerator(attributes) {
     }
 }
 
-function ParserAJAX (attributes, formSelector, feedbackSelector, 
-                     checkingSelector) {
+function GSInviteByCSVParserAJAX (attributes, formSelector, feedbackSelector, 
+                                  checkingSelector) {
     var form=null, feedback=null, checking=null,
         URL='csv.json', PARSE_SUCCESS='parse_success', PARSE_FAIL='parse_fail';
 
@@ -301,8 +301,8 @@ function ParserAJAX (attributes, formSelector, feedbackSelector,
 }
 
 
-function InviterAJAX (invitingBlockSelector, deliverySelector, 
-                      messageSelector) {
+function GSInviteByCSVInviterAJAX (invitingBlockSelector, deliverySelector, 
+                                   messageSelector) {
     var invitingBlock=null, progressBar=null, currN=null, total=null,
         success=null, ignored=null, problems=null, email=null,
         delivery=null, message=null, json=null, membersToInvite=null, 
@@ -473,18 +473,18 @@ jQuery(window).load(function () {
     attributes = GSInviteByCSVOptionalAttributes(ts);
 
     // The template generator
-    templateGenerator = TemplateGenerator(attributes);
+    templateGenerator = GSInviteByCSVTemplateGenerator(attributes);
     jQuery(scriptElement.data('template'))
         .click(templateGenerator.generate);
 
     // The actual inviting: Parser
-    parser = ParserAJAX(attributes, scriptElement.data('form'),
-                        scriptElement.data('feedback'), 
-                        scriptElement.data('checking'));
+    parser = GSInviteByCSVParserAJAX(attributes, scriptElement.data('form'),
+                                     scriptElement.data('feedback'), 
+                                     scriptElement.data('checking'));
     // The actual inviting: Inviter
-    inviter = InviterAJAX(scriptElement.data('inviting'),
-                          scriptElement.data('delivery'),
-                          scriptElement.data('invitation'))
+    inviter = GSInviteByCSVInviterAJAX(scriptElement.data('inviting'),
+                                       scriptElement.data('delivery'),
+                                       scriptElement.data('invitation'))
 
     // Connect the Invite button up to the parser
     jQuery(scriptElement.data('invite-button')).click(parser.parse);
