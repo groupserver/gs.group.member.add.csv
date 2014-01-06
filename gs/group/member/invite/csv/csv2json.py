@@ -70,7 +70,7 @@ class CSV2JSON(GroupEndpoint):
                             'check the file.'
                     # Name hack.
                     m = {'status': -3,
-                                'message': [msg.format(rowCount, len(row),
+                        'message': [msg.format(rowCount, len(row),
                                                         len(cols))]}
                     retval = to_json(m)
                     profiles = []
