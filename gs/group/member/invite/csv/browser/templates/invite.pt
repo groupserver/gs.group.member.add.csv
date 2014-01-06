@@ -63,9 +63,7 @@
           </p>
           <table id="gs-group-member-invite-csv-columns-table">
             <colgroup class="required"
-                      tal:define="idp string:gs-group-member-invite-csv-cols"
-                      style="border-right: thin solid black;
-                             background:#ebebeb;">
+                      tal:define="idp string:gs-group-member-invite-csv-cols">
               <col id="gs-group-member-invite-csv-cols-row"/>
               <tal:block repeat="p view/requiredProperties">
                 <col id="gs-group-member-invite-csv-columns"
@@ -76,7 +74,7 @@
                       class="optional"
                       span="1" />
             <thead>
-              <tr style="border-bottom: thin solid black;">
+              <tr>
                 <th></th>
                 <th colspan="2"
                     tal:attributes="colspan python:len(view.requiredProperties)"
@@ -110,8 +108,7 @@
                         <li>
                           <a href="#"
                              tal:attributes="id property/token"
-                             tal:content="property/title"
-                             style="text-decoration:none;">Timezone</a>
+                             tal:content="property/title">Timezone</a>
                         </li>
                       </tal:block>
                     </ul>
@@ -263,7 +260,7 @@
             (<span class="curr-n">18</span>/<span class="total">90</span>)
           </p>
           <div class="progress">
-            <div class="bar bar-progress" style="width: 20%;"></div>
+            <div class="bar bar-progress"></div>
           </div><!--progress-->
           <section id="gs-group-member-invite-csv-feedback-inviting-success"
                    class="success collapse">
@@ -292,8 +289,7 @@
           </div><!--buttons-->
         </section><!--gs-group-member-invite-csv-feedback-inviting-->
       </div><!--gs-group-member-invite-csv-feedback-->
-      <section id="gs-group-member-invite-csv-invitation"
-               style="display:none;">
+      <section id="gs-group-member-invite-csv-invitation">
         <dl>
           <dt>From</dt>
           <dd><code tal:content="view/defaultFromEmail"
