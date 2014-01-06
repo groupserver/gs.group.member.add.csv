@@ -223,7 +223,7 @@ function GSInviteByCSVParserAJAX (attributes, formSelector, feedbackSelector,
     }
 
     function error(jqXHR, textStatus, errorThrown) {
-        
+        // FIXME
     }
 
     function show_feedback() {
@@ -462,7 +462,7 @@ function GSInviteByCSVInviterAJAX (invitingBlockSelector, deliverySelector,
     } // return
 }
 
-jQuery(window).load(function () {
+function gs_group_member_invite_csv () {
     var ms=null, ts=null, attributes=null, templateGenerator=null,
         parser=null, inviter=null, scriptElement=null;
 
@@ -505,4 +505,29 @@ jQuery(window).load(function () {
                 .removeClass('hide')
                 .addClass('in');
         });
+}
+
+function gs_group_member_invite_csv_unsupported () {
+    var scriptElement=null;
+
+    scriptElement = jQuery('#gs-group-member-invite-csv-js');
+    jQuery(scriptElement.data('form'))
+        .removeClass('in')
+        .addClass('hide');
+    jQuery(scriptElement.data('unsupported'))
+        .removeClass('hide')
+        .addClass('in');
+}
+
+jQuery(window).load(function () {
+    var fileSupported=false, formDataSupported=false;
+
+    fileSupported = (typeof File !== "undefined");
+    formDataSupported = (typeof FormData !== "undefined");
+
+    if (fileSupported && formDataSupported) {
+        gs_group_member_invite_csv();
+    } else {
+        gs_group_member_invite_csv_unsupported();
+    }
 });

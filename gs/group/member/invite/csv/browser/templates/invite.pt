@@ -301,6 +301,19 @@
 Please accept this invitation to join <tal:block replace="view/groupInfo/name">this group</tal:block>.
         </pre>
       </section><!--gs-group-member-invite-csv-message-->
+      <div id="gs-group-member-invite-csv-unsupported"
+           class="alert alert-block collapse hide">
+        <h2>Unsupported Browser</h2>
+        <p>
+          Sorry, we were unable to write a page that supports your browser.
+          <a href="#" class="email"
+             tal:attributes="href view/unsupportedEmail">Email us</a>
+          the
+          <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
+          of the people you want to invite, and we will
+          invite the people for you.
+        </p>
+      </div><!--gs-group-member-invite-csv-unsupported-->
     </div><!--gs-group-member-invite-csv-->
     <script metal:fill-slot="javascript"
             id="gs-group-member-invite-csv-js"
@@ -312,6 +325,7 @@ Please accept this invitation to join <tal:block replace="view/groupInfo/name">t
             data-parser-url="gs-group-member-invite-csv.json"
             data-invite-button="#form\.actions\.invite"
             data-form="#gs-group-member-invite-csv-form"
+            data-unsupported="#gs-group-member-invite-csv-unsupported"
             data-feedback="#gs-group-member-invite-csv-feedback"
             data-checking="#gs-group-member-invite-csv-feedback-checking"
             data-invite-url="gs-group-member-invite-json.html"
