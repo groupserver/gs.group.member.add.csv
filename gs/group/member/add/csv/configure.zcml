@@ -16,35 +16,16 @@
 
    <include package="zope.viewlet" file="meta.zcml" />
 
-   <class class=".profilelist.ProfileList">
-     <implements interface="zope.schema.interfaces.ISource"/>
-   </class>
-
-   <utility
-     name="ProfileAttributes"
-     provides="zope.schema.interfaces.IVocabularyFactory"
-     component=".profilelist.ProfileList" />
-
-   <browser:page
-     name="admin_invite_csv.html"
+  <browser:page
+     name="admin_add_csv.html"
      for="gs.group.base.interfaces.IGSGroupMarker"
      class=".ui.CSVUploadUI"
-     template="browser/templates/invite.pt"
+     template="browser/templates/add.pt"
      permission="zope2.ManageUsers"/>
-   <browser:resource
-     name="gs-group-member-invite-csv.js"
-     file="browser/javascript/invite.js"
-     permission="zope2.Public" />
-
-  <browser:page
-    name="gs-group-member-invite-csv.json"
-    for="gs.group.base.interfaces.IGSGroupMarker"
-    class=".csv2json.CSV2JSON"
-    permission="zope2.ManageUsers"/>
 
   <!-- Link to the page -->
   <browser:viewlet
-    name="gs-group-member-invite-csv-home-link"
+    name="gs-group-member-add-csv-home-link"
     manager="gs.group.member.info.interfaces.IGroupMemberAdminLinks"
     class="gs.group.member.viewlet.GroupAdminViewlet"
     template="browser/templates/link.pt"
