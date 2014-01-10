@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Copyright © 2013 E-Democracy.org and Contributors. -->
+<!-- All Rights Reserved. -->
+
+<!-- This software is subject to the provisions of the Zope Public -->
+<!-- License, Version 2.1 (ZPL).  A copy of the ZPL should accompany this -->
+<!-- distribution. -->
+
+<!-- THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED -->
+<!-- WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED -->
+<!-- WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND -->
+<!-- FITNESS FOR A PARTICULAR PURPOSE. -->
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           i18n_domain="groupserver">
+
+   <include package="zope.viewlet" file="meta.zcml" />
+
+   <class class=".profilelist.ProfileList">
+     <implements interface="zope.schema.interfaces.ISource"/>
+   </class>
+
+   <utility
+     name="ProfileAttributes"
+     provides="zope.schema.interfaces.IVocabularyFactory"
+     component=".profilelist.ProfileList" />
+
+   <browser:page
+     name="admin_invite_csv.html"
+     for="gs.group.base.interfaces.IGSGroupMarker"
+     class=".ui.CSVUploadUI"
+     template="browser/templates/invite.pt"
+     permission="zope2.ManageUsers"/>
+   <browser:resource
+     name="gs-group-member-invite-csv.js"
+     file="browser/javascript/invite.js"
+     permission="zope2.Public" />
+
+  <browser:page
+    name="gs-group-member-invite-csv.json"
+    for="gs.group.base.interfaces.IGSGroupMarker"
+    class=".csv2json.CSV2JSON"
+    permission="zope2.ManageUsers"/>
+
+  <!-- Link to the page -->
+  <browser:viewlet
+    name="gs-group-member-invite-csv-home-link"
+    manager="gs.group.member.info.interfaces.IGroupMemberAdminLinks"
+    class="gs.group.member.viewlet.GroupAdminViewlet"
+    template="browser/templates/link.pt"
+    permission="zope2.ManageUsers"
+    weight="15"
+    title="Invite Members by CSV" />
+</configure>
