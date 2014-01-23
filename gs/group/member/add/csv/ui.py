@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright © 2013 OnlineGroups.net and Contributors.
+# Copyright © 2014 OnlineGroups.net and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -17,7 +17,7 @@ from urllib import quote
 from zope.cachedescriptors.property import Lazy
 from gs.group.base import GroupPage
 from gs.profile.email.base.emailuser import EmailUser
-from .profilelist import ProfileList
+from gs.group.member.invite.csv.profilelist import ProfileList
 
 
 class CSVUploadUI(GroupPage):
@@ -51,16 +51,16 @@ class CSVUploadUI(GroupPage):
     def unsupportedEmail(self):
         m = '''Hi,
 
-I would like to invite some people to join my group, {0}:
+I would like to add some people to my group, {0}:
   {1}
 
-However, the Invite by CSV page does not support my browser. Could you please
-invite the people for me? I have attached a CSV file below.'''
+However, the Add by CSV page does not support my browser. Could you please
+add the people for me? I have attached a CSV file below.'''
 
         msg = m.format(self.groupInfo.name.encode('ascii', 'ignore'),
                         self.groupInfo.url)
         b = 'body={0}'.format(quote(msg))
-        s = 'Subject={0}'.format(quote('Invite by CSV Unsupported'))
+        s = 'Subject={0}'.format(quote('Add by CSV Unsupported'))
         retval = 'mailto:{email}?{subject}&{body}'.format(
                     email=self.siteInfo.get_support_email(),
                     subject=s, body=b)
