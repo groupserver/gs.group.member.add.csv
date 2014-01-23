@@ -1,6 +1,6 @@
-<li id="gs-group-member-invite-csv-home-link">
+<li id="gs-group-member-add-csv-home-link">
   <a
-    title="Invite members using a CSV"
-    tal:attributes="href string:${view/groupInfo/relativeURL}/admin_invite_csv.html"
-    href="admin_invite_csv.html"><strong>Invite</strong> people in bulk</a>
-</li><!--gs-group-member-invite-csv-home-link-->
+    title="Add members using a CSV"
+    tal:attributes="href string:${view/groupInfo/relativeURL}/admin_add_csv.html"
+    href="admin_add_csv.html"><strong>Add</strong> people in bulk</a>
+</li><!--gs-group-member-add-csv-home-link-->
