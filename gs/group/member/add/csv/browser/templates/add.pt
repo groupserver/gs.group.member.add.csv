@@ -4,7 +4,7 @@
       metal:use-macro="context/@@groupserver_layout/page">
   <head>
     <title metal:fill-slot="title">
-      Invite by CSV:
+      Add by CSV:
       <tal:block
         replace="string:${view/groupInfo/name}: ${view/siteInfo/name}"/>
     </title>
@@ -33,15 +33,15 @@
         </a>
       </li>
       <li>
-        Invite by CSV
+        Add by CSV
       </li>
     </ul>
-    <div id="gs-group-member-invite-csv" role="main"
-         aria-labelledby="gs-group-member-invite-csv-h"
+    <div id="gs-group-member-add-csv" role="main"
+         aria-labelledby="gs-group-member-add-csv-h"
          metal:fill-slot="body">
-      <h1>Invite by CSV</h1>
+      <h1>Add by CSV</h1>
       <p class="intro muted">
-        If you need to invite many people to join
+        If you need to add many people to join
         <span class="group" tal:content="view/groupInfo/name">this group</span>
         then it <em>can</em> be easier to create a spreadsheet with all the
         information about the new members, and upload that to this page.
@@ -49,9 +49,9 @@
         (<abbr class="initialism" title="Comma Separated Value">CSV</abbr>, or
         comma separated value).
       </p>
-      <div id="gs-group-member-invite-csv-form"
+      <div id="gs-group-member-add-csv-form"
            class="fade in">
-        <section id="gs-group-member-invite-csv-columns">
+        <section id="gs-group-member-add-csv-columns">
           <h2>Columns</h2>
           <p class="muted">
             First, specify the columns.
@@ -61,16 +61,16 @@
             as the first column, and <em>Name</em> as the second column;
             you may add other columns.
           </p>
-          <table id="gs-group-member-invite-csv-columns-table">
+          <table id="gs-group-member-add-csv-columns-table">
             <colgroup class="required"
-                      tal:define="idp string:gs-group-member-invite-csv-cols">
-              <col id="gs-group-member-invite-csv-cols-row"/>
+                      tal:define="idp string:gs-group-member-add-csv-cols">
+              <col id="gs-group-member-add-csv-cols-row"/>
               <tal:block repeat="p view/requiredProperties">
-                <col id="gs-group-member-invite-csv-columns"
+                <col id="gs-group-member-add-csv-columns"
                      tal:attributes="id string:${idp}-${p/token}"/>
               </tal:block>
             </colgroup>
-            <colgroup id="gs-group-member-invite-csv-columns-optional"
+            <colgroup id="gs-group-member-add-csv-columns-optional"
                       class="optional"
                       span="1" />
             <thead>
@@ -95,7 +95,7 @@
                           tal:content="python:chr(c)">A</span></th>
                 </tal:block>
                 <td rowspan="3"
-                    id="gs-group-member-invite-csv-columns-spec-optional"
+                    id="gs-group-member-add-csv-columns-spec-optional"
                     tal:condition="view/optionalProperties">
                   <div class="btn-group">
                     <a class="btn dropdown-toggle"
@@ -150,12 +150,12 @@
             should look like, and it can be used as the basis of your own
             spreadsheet.
           </p>
-          <p id="gs-group-member-invite-csv-columns-template">
+          <p id="gs-group-member-add-csv-columns-template">
             <a data-icon="&#xe002;" type="text/csv" download="template.csv"
                class="btn btn-mini"><code>template.csv</code></a>
           </p>
-        </section><!--gs-group-member-invite-csv-columns-->
-        <section id="gs-group-member-invite-csv-file"
+        </section><!--gs-group-member-add-csv-columns-->
+        <section id="gs-group-member-add-csv-file"
              class="form-widget required">
           <label for="form.file">File</label>
           <p class="muted">
@@ -168,8 +168,8 @@
           <input type="file" accept="text/csv,text/plain,.csv"
                  multiple="false"
                  name="form.file" id="form.file"/>
-        </section><!--gs-group-member-invite-csv-file-->
-        <section id="gs-group-member-invite-csv-delivery"
+        </section><!--gs-group-member-add-csv-file-->
+        <section id="gs-group-member-add-csv-delivery"
                  class="form-widget disclosureWidget">
           <label class="disclosureButton">Message delivery</label>
           <div class="val disclosureShowHide" style="display:none;">
@@ -199,23 +199,23 @@
                      class="radioLabel">Web only</label>
             </div>
           </div>
-        </section><!--gs-group-member-invite-csv-file-->
+        </section><!--gs-group-member-add-csv-file-->
         <div class="buttons">
           <div class="formelementbutton">
-            <input type="submit" class="button btn" value="Invite"
-                   name="form.actions.invite" id="form.actions.invite" />
+            <input type="submit" class="button btn" value="Add"
+                   name="form.actions.add" id="form.actions.add" />
           </div>
         </div><!--buttons-->
-      </div><!--gs-group-member-invite-csv-form-->
-      <div id="gs-group-member-invite-csv-feedback"
+      </div><!--gs-group-member-add-csv-form-->
+      <div id="gs-group-member-add-csv-feedback"
            class="collapse"
-           aria-labelledby="gs-group-member-invite-csv-feedback-h">
-        <h2 id="gs-group-member-invite-csv-feedback-h">
+           aria-labelledby="gs-group-member-add-csv-feedback-h">
+        <h2 id="gs-group-member-add-csv-feedback-h">
           Processing <code class="filename">csv.file</code>
         </h2>
-        <section id="gs-group-member-invite-csv-feedback-checking"
+        <section id="gs-group-member-add-csv-feedback-checking"
                  class="fade">
-          <h3 id="gs-group-member-invite-csv-feedback-checking-h">
+          <h3 id="gs-group-member-add-csv-feedback-checking-h">
             <span data-icon="&#xe619;" aria-hidden="true"
                   class="loading"> </span>
             Checking
@@ -228,27 +228,27 @@
             (Technically, this step is called <q>parsing</q>.)
             Once the file has been checked then the people specified in the
             <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
-            file will be invited.
+            file will be added.
           </p>
-          <div id="gs-group-member-invite-csv-feedback-checking-alert"
+          <div id="gs-group-member-add-csv-feedback-checking-alert"
                class="alert alert-block alert-error fade">
             <h4>
               Check failed
               <button aria-hidden="true" type="button" class="close reset"
                       data-dismiss="alert">&#215;</button>
             </h4>
-            <p id="gs-group-member-invite-csv-feedback-checking-alert-issue"
+            <p id="gs-group-member-add-csv-feedback-checking-alert-issue"
                class="issue">
             </p>
             <div class="buttons">
               <div class="formelementbutton">
-                <a id="gs-group-member-invite-csv-feedback-inviting-reset"
+                <a id="gs-group-member-add-csv-feedback-inviting-reset"
                    class="btn reset" data-icon="&#x25c3;">Back</a>
               </div>
             </div><!--buttons-->
-          </div><!--gs-group-member-invite-csv-feedback-checking-alert-->
-        </section><!--gs-group-member-invite-csv-feedback-checking-->
-        <section id="gs-group-member-invite-csv-feedback-inviting"
+          </div><!--gs-group-member-add-csv-feedback-checking-alert-->
+        </section><!--gs-group-member-add-csv-feedback-checking-->
+        <section id="gs-group-member-add-csv-feedback-inviting"
                  class="collapse">
           <h3>
             <span data-icon="&#xe619;" aria-hidden="true"
@@ -262,34 +262,34 @@
           <div class="progress">
             <div class="bar bar-progress"></div>
           </div><!--progress-->
-          <section id="gs-group-member-invite-csv-feedback-inviting-success"
+          <section id="gs-group-member-add-csv-feedback-inviting-success"
                    class="success collapse">
-            <h4>Invited</h4>
-            <ul >
+            <h4>Added</h4>
+            <ul>
             </ul>
-          </section><!--gs-group-member-invite-csv-feedback-inviting-success-->
-          <section id="gs-group-member-invite-csv-feedback-inviting-ignored"
+          </section><!--gs-group-member-add-csv-feedback-inviting-success-->
+          <section id="gs-group-member-add-csv-feedback-inviting-ignored"
                    class="ignored collapse">
             <h4>Ignored</h4>
             <ul>
             </ul>
           </section>
-          <section id="gs-group-member-invite-csv-feedback-inviting-problems"
+          <section id="gs-group-member-add-csv-feedback-inviting-problems"
                    class="problems collapse">
             <h4>Problems</h4>
             <ul>
             </ul>
-          </section><!--gs-group-member-invite-csv-feedback-inviting-problems-->
+          </section><!--gs-group-member-add-csv-feedback-inviting-problems-->
           <div class="buttons fade">
             <div class="formelementbutton">
-              <a id="gs-group-member-invite-csv-feedback-inviting-reset"
+              <a id="gs-group-member-add-csv-feedback-inviting-reset"
                  class="btn reset"><span
-                               class="muted">✚</span> Invite more&#8230;</a>
+                               class="muted">✚</span> Add more&#8230;</a>
             </div>
           </div><!--buttons-->
-        </section><!--gs-group-member-invite-csv-feedback-inviting-->
-      </div><!--gs-group-member-invite-csv-feedback-->
-      <section id="gs-group-member-invite-csv-invitation">
+        </section><!--gs-group-member-add-csv-feedback-inviting-->
+      </div><!--gs-group-member-add-csv-feedback-->
+      <section id="gs-group-member-add-csv-invitation">
         <dl>
           <dt>From</dt>
           <dd><code tal:content="view/defaultFromEmail"
@@ -300,8 +300,8 @@
         <pre class="message">
 Please accept this invitation to join <tal:block replace="view/groupInfo/name">this group</tal:block>.
         </pre>
-      </section><!--gs-group-member-invite-csv-message-->
-      <div id="gs-group-member-invite-csv-unsupported"
+      </section><!--gs-group-member-add-csv-message-->
+      <div id="gs-group-member-add-csv-unsupported"
            class="alert alert-block collapse hide">
         <h2>Unsupported Browser</h2>
         <p>
@@ -310,28 +310,28 @@ Please accept this invitation to join <tal:block replace="view/groupInfo/name">t
              tal:attributes="href view/unsupportedEmail">Email us</a>
           the
           <abbr class="initialism" title="Comma Separated Value">CSV</abbr>
-          of the people you want to invite, and we will
-          invite the people for you.
+          of the people you want to add, and we will
+          add the people for you.
         </p>
-      </div><!--gs-group-member-invite-csv-unsupported-->
-    </div><!--gs-group-member-invite-csv-->
+      </div><!--gs-group-member-add-csv-unsupported-->
+    </div><!--gs-group-member-add-csv-->
     <script metal:fill-slot="javascript"
             id="gs-group-member-invite-csv-js"
             type="text/javascript"
             src="/++resource++gs-group-member-invite-csv.js"
             defer="true"
-            data-columns="#gs-group-member-invite-csv-columns-table"
-            data-template="#gs-group-member-invite-csv-columns-template .btn"
-            data-parser-url="/gs-group-member-invite-csv.json"
-            data-invite-button="#form\.actions\.invite"
-            data-form="#gs-group-member-invite-csv-form"
-            data-unsupported="#gs-group-member-invite-csv-unsupported"
-            data-feedback="#gs-group-member-invite-csv-feedback"
-            data-checking="#gs-group-member-invite-csv-feedback-checking"
-            data-invite-url="gs-group-member-invite-json.html"
-            data-inviting="#gs-group-member-invite-csv-feedback-inviting"
+            data-columns="#gs-group-member-add-csv-columns-table"
+            data-template="#gs-group-member-add-csv-columns-template .btn"
+            data-parser-url="/gs-group-member-add-csv.json"
+            data-invite-button="#form\.actions\.add"
+            data-form="#gs-group-member-add-csv-form"
+            data-unsupported="#gs-group-member-add-csv-unsupported"
+            data-feedback="#gs-group-member-add-csv-feedback"
+            data-checking="#gs-group-member-add-csv-feedback-checking"
+            data-invite-url="gs-group-member-add-json.html"
+            data-inviting="#gs-group-member-add-csv-feedback-inviting"
             data-delivery="[name=form\.delivery]"
-            data-invitation='#gs-group-member-invite-csv-invitation'
+            data-invitation='#gs-group-member-add-csv-invitation'
             data-reset='.reset'
             > </script>
   </body>
