@@ -4,7 +4,7 @@
       metal:use-macro="context/@@groupserver_layout/page">
   <head>
     <title metal:fill-slot="title">
-      Add by CSV:
+      Add people in bulk:
       <tal:block
         replace="string:${view/groupInfo/name}: ${view/siteInfo/name}"/>
     </title>
@@ -33,13 +33,13 @@
         </a>
       </li>
       <li>
-        Add by CSV
+        Add people in bulk
       </li>
     </ul>
     <div id="gs-group-member-add-csv" role="main"
          aria-labelledby="gs-group-member-add-csv-h"
          metal:fill-slot="body">
-      <h1>Add by CSV</h1>
+      <h1>Add people in bulk</h1>
       <p class="intro muted">
         If you need to add many people to join
         <span class="group" tal:content="view/groupInfo/name">this group</span>
