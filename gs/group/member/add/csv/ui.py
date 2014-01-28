@@ -16,7 +16,7 @@ from __future__ import absolute_import, unicode_literals
 from urllib import quote
 from zope.cachedescriptors.property import Lazy
 from gs.group.base import GroupPage
-from gs.profile.email.base.emailuser import EmailUser
+from gs.profile.email.base import EmailUser
 from gs.group.member.invite.csv.profilelist import ProfileList
 
 
