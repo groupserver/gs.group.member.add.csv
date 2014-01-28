@@ -24,7 +24,7 @@ class RequiredAttributeMissingError(ValidationError):
         self.value = value
 
     def __unicode__(self):
-        m = u'The required attribute {0} is missing'
+        m = 'The required attribute {0} is missing'
         retval = m.format(self.value)
         return retval
 
