@@ -14,7 +14,7 @@
            xmlns:browser="http://namespaces.zope.org/browser"
            i18n_domain="groupserver">
 
-   <include package="zope.viewlet" file="meta.zcml" />
+  <include package="zope.viewlet" file="meta.zcml" />
 
   <browser:page
      name="admin_add_csv.html"
