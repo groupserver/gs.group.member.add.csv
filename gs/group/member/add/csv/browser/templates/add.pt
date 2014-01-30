@@ -8,15 +8,9 @@
       <tal:block
         replace="string:${view/groupInfo/name}: ${view/siteInfo/name}"/>
     </title>
-    <!--TODO: Metadata-->
-    <tal:block metal:fill-slot="metadata">
-      <link rel="up" href="/" title="Site Home"
-            tal:attributes="title string:${view/siteInfo/name} Home;"/>
-      <tal:block
-        replace="structure provider:groupserver.GroupHomepageMetadata">
-        The metadata for the Group page.
-      </tal:block>
-    </tal:block>
+    <link rel="up" href="/" title="Group Home" metal:fill-slot="metadata"
+          tal:attributes="href view/groupInfo/relativeURL;
+                          title string:${view/groupInfo/name};" />
   </head>
   <body>
     <ul metal:fill-slot="breadcrumb">
@@ -28,7 +22,7 @@
       </li>
       <li>
         <a class="group"
-              tal:attributes="href view/groupInfo/relativeURL;">
+           tal:attributes="href view/groupInfo/relativeURL;">
           <strong tal:content="view/groupInfo/name">This group</strong>
         </a>
       </li>
@@ -41,13 +35,21 @@
          metal:fill-slot="body">
       <h1>Add people in bulk</h1>
       <p class="intro muted">
-        If you need to add many people to join
-        <span class="group" tal:content="view/groupInfo/name">this group</span>
-        then it <em>can</em> be easier to create a spreadsheet with all the
-        information about the new members, and upload that to this page.
-        It may also be a pain to get the data in the right format
-        (<abbr class="initialism" title="Comma Separated Value">CSV</abbr>, or
-        comma separated value).
+        If you need to add many people to
+        <span class="group"
+              tal:content="view/groupInfo/name">this group</span>
+        then it <em>can</em> be easier to add people in bulk, using this
+        page, than to use the
+        <a tal:attributes="href string:${view/groupInfo/relativeURL}/admin_add.html"
+           href="admin_add.html">Add a new member</a>
+        page.
+        To add people in bulk you must create a spreadsheet with all the
+        profile information about the new members, and upload that to
+        this page.
+        The difficulty in formatting the data correctly (in a
+        <abbr class="initialism" title="Comma Separated Value">CSV</abbr>,
+        or comma separated value, file) may outweigh the time savings in
+        using this page.
       </p>
       <p class="alert">
         This form should only be used when you have
@@ -136,15 +138,12 @@
                   <td tal:condition="python:p.token=='email'" class="col-eg">
                     <code class="email">a.person@example.com</code>
                   </td>
-                  <td tal:condition="python:p.token=='fn'" class="col-eg fn">
-                    A. Person
-                  </td>
+                  <td tal:condition="python:p.token=='fn'"
+                      class="col-eg fn">A. Person</td>
                   <td tal:condition="python:p.token not in ('email', 'fn')"
-                      class="col-eg"
                       tal:attributes="class string:col-eg ${p/token};"
-                      tal:content="string:Example ${p/title}">
-                    Example Data
-                  </td>
+                      tal:content="string:Example ${p/title}"
+                      class="col-eg">Example data</td>
                 </tal:block>
               </tr>
             </tbody>
@@ -163,7 +162,7 @@
           </p>
         </section><!--gs-group-member-add-csv-columns-->
         <section id="gs-group-member-add-csv-file"
-             class="form-widget required">
+                 class="form-widget required">
           <label for="form.file">File</label>
           <p class="muted">
             Next, select the
@@ -200,7 +199,7 @@
                      class="radioLabel">Daily digest of topics</label>
             </div>
             <div class="radioItem">
-            <input type="radio" name="form.delivery" class="radioType"
+              <input type="radio" name="form.delivery" class="radioType"
                      id="form.delivery.web" value="web" />
               <label for="form.delivery.web"
                      class="radioLabel">Web only</label>
@@ -291,7 +290,7 @@
             <div class="formelementbutton">
               <a id="gs-group-member-add-csv-feedback-inviting-reset"
                  class="btn reset"><span
-                               class="muted">✚</span> Add more&#8230;</a>
+                                     class="muted">✚</span> Add more&#8230;</a>
             </div>
           </div><!--buttons-->
         </section><!--gs-group-member-add-csv-feedback-inviting-->
@@ -305,7 +304,7 @@
           <dd class="subject">Welcome to <tal:block replace="view/groupInfo/name">this group</tal:block></dd>
         </dl>
         <pre class="message">
-This is ignored, and the standard Welcome message is sent.
+          This is ignored, and the standard Welcome message is sent.
         </pre>
       </section><!--gs-group-member-add-csv-message-->
       <div id="gs-group-member-add-csv-unsupported"
@@ -325,7 +324,7 @@ This is ignored, and the standard Welcome message is sent.
     <script metal:fill-slot="javascript"
             id="gs-group-member-invite-csv-js"
             type="text/javascript"
-            src="/++resource++gs-group-member-invite-csv.js"
+            src="/++resource++gs-group-member-invite-csv-20140130.js"
             defer="true"
             data-columns="#gs-group-member-invite-csv-columns-table"
             data-template="#gs-group-member-add-csv-columns-template .btn"
@@ -339,7 +338,6 @@ This is ignored, and the standard Welcome message is sent.
             data-inviting="#gs-group-member-add-csv-feedback-inviting"
             data-delivery="[name=form\.delivery]"
             data-invitation='#gs-group-member-invite-csv-invitation'
-            data-reset='.reset'
-            > </script>
+            data-reset='.reset'> </script>
   </body>
 </html>
