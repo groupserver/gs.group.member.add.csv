@@ -328,7 +328,7 @@
             defer="true"
             data-columns="#gs-group-member-invite-csv-columns-table"
             data-template="#gs-group-member-add-csv-columns-template .btn"
-            data-parser-url="/gs-group-member-invite-csv.json"
+            data-parser-url="gs-group-member-invite-csv.json"
             data-invite-button="#form\.actions\.add"
             data-form="#gs-group-member-add-csv-form"
             data-unsupported="#gs-group-member-add-csv-unsupported"
@@ -338,6 +338,7 @@
             data-inviting="#gs-group-member-add-csv-feedback-inviting"
             data-delivery="[name=form\.delivery]"
             data-invitation='#gs-group-member-invite-csv-invitation'
-            data-reset='.reset'> </script>
+            data-reset='.reset'
+            tal:attributes="data-parser-url string:${view/groupInfo/relativeURL}/gs-group-member-invite-csv.json"> </script>
   </body>
 </html>
