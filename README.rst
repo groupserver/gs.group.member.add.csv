@@ -45,7 +45,7 @@ invited.
 Resources
 =========
 
-- Code repository: https://source.iopen.net/groupserver/gs.group.member.add.csv
+- Code repository: https://github.com/groupserver/gs.group.member.add.csv
 - Questions and comments to http://groupserver.org/groups/development
 - Report bugs at https://redmine.iopen.net/projects/groupserver
 
@@ -58,10 +58,10 @@ Resources
 
 .. [#base] For adding a single person to a group see the base product
           ``gs.group.member.add.base``:
-          <https://source.iopen.net/groupserver/gs.group.member.add.base>
+          <https://github.com/groupserver/gs.group.member.add.base>
 
-.. [#json] See <https://source.iopen.net/groupserver/gs.group.member.add.json>
+.. [#json] See <https://github.com/groupserver/gs.group.member.add.json>
 
-.. [#invite] See <https://source.iopen.net/groupserver/gs.group.member.invite.csv>
+.. [#invite] See <https://github.com/groupserver/gs.group.member.invite.csv>
 
 ..  LocalWords:  CSV html csv json groupserver
