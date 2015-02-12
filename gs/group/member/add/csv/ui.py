@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-##############################################################################
+############################################################################
 #
-# Copyright © 2014 OnlineGroups.net and Contributors.
+# Copyright © 2014, 2015 OnlineGroups.net and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,7 +11,7 @@
 # WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
 # FOR A PARTICULAR PURPOSE.
 #
-##############################################################################
+############################################################################
 from __future__ import absolute_import, unicode_literals
 from urllib import quote
 from zope.cachedescriptors.property import Lazy
@@ -32,13 +32,13 @@ class CSVUploadUI(GroupPage):
     @Lazy
     def optionalProperties(self):
         retval = [p for p in self.profileList
-                    if not self.profileList.properties[p.token].required]
+                  if not self.profileList.properties[p.token].required]
         return retval
 
     @Lazy
     def requiredProperties(self):
         retval = [p for p in self.profileList
-                    if self.profileList.properties[p.token].required]
+                  if self.profileList.properties[p.token].required]
         return retval
 
     @Lazy
@@ -58,10 +58,9 @@ However, the Add by CSV page does not support my browser. Could you please
 add the people for me? I have attached a CSV file below.'''
 
         msg = m.format(self.groupInfo.name.encode('ascii', 'ignore'),
-                        self.groupInfo.url)
+                       self.groupInfo.url)
         b = 'body={0}'.format(quote(msg))
         s = 'Subject={0}'.format(quote('Add by CSV Unsupported'))
         retval = 'mailto:{email}?{subject}&{body}'.format(
-                    email=self.siteInfo.get_support_email(),
-                    subject=s, body=b)
+            email=self.siteInfo.get_support_email(), subject=s, body=b)
         return retval
