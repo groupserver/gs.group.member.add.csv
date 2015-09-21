@@ -12,8 +12,12 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ############################################################################
-from __future__ import absolute_import, unicode_literals
-from urllib import quote
+from __future__ import absolute_import, unicode_literals, print_function
+import sys
+if (sys.version_info >= (3, )):
+    from urllib.parse import splitquery, quote
+else:
+    from urllib import splitquery, quote  # lint:ok
 from zope.cachedescriptors.property import Lazy
 from gs.group.base import GroupPage
 from gs.profile.email.base import EmailUser
@@ -59,8 +63,8 @@ add the people for me? I have attached a CSV file below.'''
 
         msg = m.format(self.groupInfo.name.encode('ascii', 'ignore'),
                        self.groupInfo.url)
-        b = 'body={0}'.format(quote(msg))
-        s = 'Subject={0}'.format(quote('Add by CSV Unsupported'))
-        retval = 'mailto:{email}?{subject}&{body}'.format(
+        b = quote(msg)
+        s = quote('Add by CSV Unsupported')
+        retval = 'mailto:{email}?subject={subject}&body={body}'.format(
             email=self.siteInfo.get_support_email(), subject=s, body=b)
         return retval
